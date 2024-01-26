@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "349263675520",
+    "project_id": "voiture-13909",
+    "storage_bucket": "voiture-13909.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:349263675520:android:381c9c97396d1e539f2665",
+        "android_client_info": {
+          "package_name": "com.falyarivelo.deploy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVfxd9mk3TQal_8OZR_-B_HFeq8imwhYA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
