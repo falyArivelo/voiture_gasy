@@ -9,50 +9,39 @@ import * as SecureStore from 'expo-secure-store';
 import Colors from '../Shared/Colors';
 
 const AnnonceForm = () => {
-  const [formData, setFormData] = useState({
-    description: '',
-    idUser: '',
-    idModele: '',
-    idCarburant: '',
-    boite: '',
-    contact: '',
-    date: '',
-    prix: '',
-    commission: '',
-    kilometrage: '',
-    etat: '',
-    status: '',
-  });
+  //Annonce saves(String description,Long idUser,Long idModele,Long idCarburant,String boite,String contact,double prix,double kilometrage,List<String> photos)
+  // liste des donnees utiles
   const boites = ['manuel', 'automatique'];
-
   const [marques, setMarques] = useState([]);
   const [modeles, setModeles] = useState([]);
   const [carburants, setCarburants] = useState([]);
-  const [token, setToken] = useState(null);
+
+  // variable a envoyé
+  const [description, setDescription] = useState('');
+  const [idUser, setIdUser] = useState(null);
   const [selectedMarque, setSelectedMarque] = useState(null);
   const [selectedModele, setSelectedModele] = useState(null);
   const [selectedCarburant, setSelectedCarburant] = useState(null);
   const [selectedBoite, setSelectedBoite] = useState('manuel');
+  const [token, setToken] = useState(null);
+  const [contact, setContact] = useState('');
+  const [prix, setPrix] = useState('');
+  const [kilometrage, setKilometrage] = useState('');
+  const [photos, setPhotos] = useState([]);
 
   const handleMarqueSelect = async (idMarque) => {
-
-
     setSelectedMarque(idMarque);
-
     try {
       const storedToken = await SecureStore.getItemAsync('token');
-
-      const apiUrl = `http://192.168.88.17:8080/modeles/${idMarque}`;
+      const apiUrl = `http://192.168.88.20:8080/modeles/${idMarque}`;
       const config = {
         headers: {
           'Authorization': `Bearer ${storedToken}`,
         },
       };
       const response = await axios.get(apiUrl, config);
-      // const response = await axios.get(`http://localhost:8080/modeles/${idMarque}`);
       const modeles = response.data;
       setModeles(modeles);
-      // Faites quelque chose avec les modèles...
     } catch (error) {
       console.error(error);
     }
@@ -67,27 +56,43 @@ const AnnonceForm = () => {
   const handleBoiteSelect = (boite) => {
     setSelectedBoite(boite);
   };
+  const handleContactChange = (e) => {
+    setContact(e);
+  };
 
+  const handlePrixChange = (e) => {
+    setPrix(e);
+  };
+
+  const handleKilometrageChange = (e) => {
+    setKilometrage(e);
+  };
+
+  const handleDescriptionChange = (e) => {
+    setDescription(e);
+  };
 
   useEffect(() => {
     const fetchMarques = async () => {
       try {
+        const userId = await SecureStore.getItemAsync('user');
+        const user = JSON.parse(userId);
+        setIdUser(user.id);
+
         const storedToken = await SecureStore.getItemAsync('token');
         setToken(storedToken);
 
-        const apiUrl = 'http://192.168.88.17:8080/marques';
+        const apiUrl = 'http://192.168.88.20:8080/marques';
         const config = {
           headers: {
             'Authorization': `Bearer ${storedToken}`,
           },
         };
 
-
         const response = await axios.get(apiUrl, config);
         setMarques(response.data);
 
-        const apiUrlCarburants = 'http://192.168.88.17:8080/carburants';
-
+        const apiUrlCarburants = 'http://192.168.88.20:8080/carburants';
 
         const responseCarburants = await axios.get(apiUrlCarburants, config);
         setCarburants(responseCarburants.data);
@@ -97,32 +102,33 @@ const AnnonceForm = () => {
       }
     };
 
-    // Appeler la fonction fetchMarques lors du montage du composant
     fetchMarques();
   }, [token]);
 
-
-  const handleChange = (name, value) => {
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
-  };
-
   const handleSubmit = async () => {
-    try {
-      const response = await axios.post('URL_DE_VOTRE_API', formData);
+    
+    const dataToSend = {
+      description : description,
+      idUser: idUser,
+      idModele: selectedModele,
+      idCarburant: selectedCarburant,
+      boite: selectedBoite,
+      contact : contact,
+      prix : prix,
+      kilometrage : kilometrage,
+      photos: ['lien_photo_1', 'lien_photo_2'],
+    };
 
-      console.log('Réponse du serveur:', response.data);
-    } catch (error) {
-      console.error('Erreur lors de l\'envoi de la requête:', error);
-    }
+    console.log(dataToSend);
+    // try {
+    //   const response = await axios.post('URL_DE_VOTRE_API', formData);
+
+    //   console.log('Réponse du serveur:', response.data);
+    // } catch (error) {
+    //   console.error('Erreur lors de l\'envoi de la requête:', error);
+    // }
+    
   };
-
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
-  const [items, setItems] = useState([
-    { label: 'Option 1', value: '1' },
-    { label: 'Option 2', value: '2' },
-    // Ajoutez plus d'options si nécessaire
-  ]);
 
   return (
     <ScrollView style={global.publier_annonceForm} >
@@ -135,9 +141,10 @@ const AnnonceForm = () => {
           style={global.publier_input_descri}
           multiline
           numberOfLines={4}
-          onChangeText={(value) => handleChange('description', value)}
-          value={formData.description}
+          value={description}
+          onChangeText={handleDescriptionChange}
           placeholder='Description'
+
         />
       </View>
 
@@ -225,14 +232,14 @@ const AnnonceForm = () => {
         ))}
       </View>
 
-
       <View >
         <Text style={global.publier_label}>Contact</Text>
         <TextInput
           style={global.publier_input}
-          onChangeText={(value) => handleChange('contact', value)}
-          value={formData.contact}
+          value={contact}
+          onChangeText={handleContactChange}
           placeholder='contact'
+
         />
       </View>
 
@@ -240,8 +247,10 @@ const AnnonceForm = () => {
         <Text style={global.publier_label}>Prix</Text>
         <TextInput
           style={global.publier_input}
-          onChangeText={(value) => handleChange('Prix', value)}
-          value={formData.Prix}
+          value={prix}
+          onChangeText={handlePrixChange} 
+          keyboardType="numeric" 
+
           placeholder='Prix'
         />
       </View>
@@ -250,21 +259,15 @@ const AnnonceForm = () => {
         <Text style={global.publier_label}>kilometrage</Text>
         <TextInput
           style={global.publier_input}
-          onChangeText={(value) => handleChange('kilometrage', value)}
-          value={formData.kilometrage}
+          value={kilometrage}
+          onChangeText={handleKilometrageChange}
+          keyboardType="numeric" 
           placeholder='kilometrage'
         />
+        
       </View>
-      {/* <Button title="Soumettre" onPress={handleSubmit} /> */}
-      {/* <DropdownPicker
-        open={open}
-        value={value}
-        items={items}
-        setOpen={setOpen}
-        setValue={setValue}
-        setItems={setItems}
-      /> */
-      }
+       <Button title="Soumettre" onPress={handleSubmit} />
+
     </ScrollView>
   );
 };

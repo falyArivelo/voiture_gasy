@@ -12,8 +12,6 @@ import Swiper from 'react-native-swiper';
 const UploadMediaFile = () => {
     const [image, setImage] = useState(null);
     const [images, setImages] = useState([]);
-    
-
     const [Uploading, setUploading] = useState(false)
 
 

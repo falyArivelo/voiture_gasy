@@ -29,7 +29,7 @@ const Annonces = ({ navigation }) => {
                 setUser(user);
                 // console.log(user)
 
-                const response = await axios.get(`http://192.168.88.17:8080/auth/annonces/envente?idUser=${user.id}`);
+                const response = await axios.get(`http://192.168.88.20:8080/auth/annonces/envente?idUser=${user.id}`);
                 const photosLength = response.data[0].photos.length;
                 setNombrePhotos(photosLength);
                 setAnnonces(response.data);
