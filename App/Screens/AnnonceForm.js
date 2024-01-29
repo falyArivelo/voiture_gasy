@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, ScrollView } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import global from '../Shared/style/style'
-import DropdownPicker from 'react-native-dropdown-picker';
 import { RadioButton } from 'react-native-paper';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
@@ -33,7 +32,7 @@ const AnnonceForm = () => {
     setSelectedMarque(idMarque);
     try {
       const storedToken = await SecureStore.getItemAsync('token');
-      const apiUrl = `http://192.168.88.20:8080/modeles/${idMarque}`;
+      const apiUrl = `http://192.168.1.195:8080/modeles/${idMarque}`;
       const config = {
         headers: {
           'Authorization': `Bearer ${storedToken}`,
@@ -82,7 +81,7 @@ const AnnonceForm = () => {
         const storedToken = await SecureStore.getItemAsync('token');
         setToken(storedToken);
 
-        const apiUrl = 'http://192.168.88.20:8080/marques';
+        const apiUrl = 'http://192.168.1.195:8080/marques';
         const config = {
           headers: {
             'Authorization': `Bearer ${storedToken}`,
@@ -92,7 +91,7 @@ const AnnonceForm = () => {
         const response = await axios.get(apiUrl, config);
         setMarques(response.data);
 
-        const apiUrlCarburants = 'http://192.168.88.20:8080/carburants';
+        const apiUrlCarburants = 'http://192.168.1.195:8080/carburants';
 
         const responseCarburants = await axios.get(apiUrlCarburants, config);
         setCarburants(responseCarburants.data);
@@ -106,16 +105,16 @@ const AnnonceForm = () => {
   }, [token]);
 
   const handleSubmit = async () => {
-    
+
     const dataToSend = {
-      description : description,
-      idUser: idUser,
-      idModele: selectedModele,
-      idCarburant: selectedCarburant,
+      description: description,
+      idUser: Number(idUser), // Convertir en chaîne en utilisant String.valueOf
+      idModele: Number(selectedModele), // Convertir en chaîne
+      idCarburant: Number(selectedCarburant), // Convertir en chaîne
       boite: selectedBoite,
-      contact : contact,
-      prix : prix,
-      kilometrage : kilometrage,
+      contact: contact,
+      prix: Number(prix), // Convertir en nombre si nécessaire
+      kilometrage: Number(kilometrage), // Convertir en nombre si nécessaire
       photos: ['lien_photo_1', 'lien_photo_2'],
     };
 
@@ -127,7 +126,7 @@ const AnnonceForm = () => {
     // } catch (error) {
     //   console.error('Erreur lors de l\'envoi de la requête:', error);
     // }
-    
+
   };
 
   return (
@@ -248,8 +247,8 @@ const AnnonceForm = () => {
         <TextInput
           style={global.publier_input}
           value={prix}
-          onChangeText={handlePrixChange} 
-          keyboardType="numeric" 
+          onChangeText={handlePrixChange}
+          keyboardType="numeric"
 
           placeholder='Prix'
         />
@@ -261,12 +260,12 @@ const AnnonceForm = () => {
           style={global.publier_input}
           value={kilometrage}
           onChangeText={handleKilometrageChange}
-          keyboardType="numeric" 
+          keyboardType="numeric"
           placeholder='kilometrage'
         />
-        
+
       </View>
-       <Button title="Soumettre" onPress={handleSubmit} />
+      <Button title="Soumettre" onPress={handleSubmit} />
 
     </ScrollView>
   );

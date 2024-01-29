@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { Text, View, FlatList, StyleSheet, TouchableOpacity } from 'react-native'
+import { Text, View, Button, FlatList, StyleSheet, TouchableOpacity } from 'react-native'
 import { Image } from 'react-native';
 import { FontAwesome, MaterialIcons, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import Colors from '../Shared/Colors';
 import global from './../Shared/style/style';
 import Swiper from 'react-native-swiper';
+import axios from 'axios';
+import * as SecureStore from 'expo-secure-store';
 
 const AnnonceDetails = ({ navigation, route }) => {
     const annonce = route.params;
@@ -14,6 +16,38 @@ const AnnonceDetails = ({ navigation, route }) => {
     const handleLike = () => {
         setLiked(!liked);
     };
+
+    const updateStatus = async () => {
+        try {
+            const storedToken = await SecureStore.getItemAsync('token');
+            const apiUrl = `http://192.168.88.20:8080/annonces/sellApp`;
+            const config = {
+                headers: {
+                    'Authorization': `Bearer ${storedToken}`,
+                },
+            };
+            
+            const response = await axios.put(apiUrl, {
+                idAnnonce: annonce.idAnnonce,
+                idUser: 252,
+            }, config);
+
+            // const response = await axios.put('http://192.168.88.20:8080/annonces/sell', {
+            //     idAnnonce: idAnnonce,
+            //     idUser: idUser,
+            // });
+
+            console.log(response.data); // Vous pouvez traiter la réponse ici si nécessaire
+        } catch (error) {
+            console.error('Erreur lors de la mise à jour du statut :', error);
+        }
+    };
+
+    // const handleUpdateStatus = (idAnnonce, idUser) => {
+    //     return () => {
+    //         updateStatus(idAnnonce, idUser);
+    //     };
+    // };
 
 
     return (
@@ -78,6 +112,11 @@ const AnnonceDetails = ({ navigation, route }) => {
                 {/* <Text className="status">{annonce.status}</Text> */}
             </View>
 
+            <Button
+                key={annonce.idAnnonce}
+                title={`ventre ${annonce.idAnnonce}`}
+                onPress={() => updateStatus()}
+            />
         </View>
     )
 }
@@ -87,10 +126,14 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+    
+
     },
     image: {
         width: '100%',
         height: '100%',
+        borderRadius:5
+
     },
     paginationDot: {
         width: 8,

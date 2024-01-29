@@ -18,32 +18,33 @@ const Annonces = ({ navigation }) => {
 
 
     const [annonces, setAnnonces] = useState([]);
-    const [nombrePhotos, setNombrePhotos] = useState('');
+
+    const fetchAnnonces = async () => {
+        try {
+            const userId = await SecureStore.getItemAsync('user');
+            const user = JSON.parse(userId);
+            setUser(user);
+            // console.log(user)
+            const response = await axios.get(`http://192.168.88.20:8080/auth/annonces/envente?idUser=${user.id}`);
+            ;
+            setAnnonces(response.data);
+        } catch (error) {
+            console.error('Erreur lors de la récupération des annonces:', error);
+        }
+    };
 
     useEffect(() => {
-        // Fonction asynchrone pour récupérer les annonces
-        const fetchAnnonces = async () => {
-            try {
-                const userId = await SecureStore.getItemAsync('user');
-                const user = JSON.parse(userId);
-                setUser(user);
-                // console.log(user)
-
-                const response = await axios.get(`http://192.168.88.20:8080/auth/annonces/envente?idUser=${user.id}`);
-                const photosLength = response.data[0].photos.length;
-                setNombrePhotos(photosLength);
-                setAnnonces(response.data);
-            } catch (error) {
-                console.error('Erreur lors de la récupération des annonces:', error);
-            }
-        };
-        // Appeler la fonction asynchrone
         fetchAnnonces();
-    }, []); // Le tableau vide signifie que useEffect s'exécute une seule fois après le rendu initial
+        const intervalId = setInterval(() => {
+            fetchAnnonces();
+        }, 5000); 
+        return () => clearInterval(intervalId);
+
+    }, []);
 
     const Annonce = ({ annonce }) => {
-        // console.log(annonce.liked)
         const [liked, setLiked] = useState(annonce.liked);
+        const [nombrePhotos, setNombrePhotos] = useState(annonce.photos.length);
 
         const handleLike = () => {
             setLiked(!liked);
@@ -59,7 +60,7 @@ const Annonces = ({ navigation }) => {
                         <View style={global.pdp}>
                             <Image style={global.pdpImage}
                                 // source={{ uri: annonce.pdp }}
-                                source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/voiture-13909.appspot.com/o/45f2d329-e49b-402d-b2c1-7d5daa809a1f.jpeg?alt=media&token=408cd76a-55bc-4454-a9e2-acef0cb3041d' }}
+                                source={{ uri: annonce.annonce.proprietaire.photoProfil }}
 
                             />
                         </View>
@@ -68,6 +69,7 @@ const Annonces = ({ navigation }) => {
                     <Pressable
                         onPress={() => navigation.navigate('AnnonceDetails', annonce)}>
                         <View style={global.imageContainer}>
+
                             <Image
                                 style={global.cardImage}
                                 source={{ uri: annonce.photos[0].lienPhoto }}

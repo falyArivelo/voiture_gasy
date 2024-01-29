@@ -21,6 +21,15 @@ const global = StyleSheet.create({
         gap: 5,
         alignItems: 'center',
     },
+    myFlexSpaceBetween: {
+        display: 'flex',
+        flexDirection: 'row',
+        gap: 5,
+        alignItems: 'center',
+        justifyContent:'space-between',
+        width:'100%',
+        paddingHorizontal:15
+    },
     container: {
         flex: 1,
         // backgroundColor: Colors.BG_COLOR,
@@ -121,19 +130,22 @@ const global = StyleSheet.create({
     },
     imageContainer: {
         position: 'relative',
+        paddingHorizontal:2,
+
     },
     imageContainer_details: {
         position: 'relative',
         width: '100%',
-        height: 500,
-        backgroundColor: Colors.LIGHT_PRIMARY,
+        height:500,
         marginBottom: 5,
+        paddingHorizontal:2,
     },
 
     cardImage: {
         width: '100%',
         height: 500,
-        // borderRadius: 5,
+        borderRadius: 5,
+        
     },
 
     // ANNONCES
@@ -158,7 +170,7 @@ const global = StyleSheet.create({
     informations: {
         display: 'flex',
         flexDirection: 'column',
-        paddingHorizontal: 10,
+        paddingHorizontal: 12,
     },
     marque: {
         fontSize: 21,
@@ -572,6 +584,7 @@ const global = StyleSheet.create({
         width: 'max-content',
         marginBottom: 15,
         textAlign: 'center',
+        paddingHorizontal:50,
     
     },
     publier_apercu_button_text: {

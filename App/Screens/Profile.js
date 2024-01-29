@@ -15,26 +15,35 @@ const Profile = ({ navigation }) => {
   const [user, setUser] = useState({});
   const [annonces, setAnnonces] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [token, setToken] = useState(null);
 
   useEffect(() => {
     // Fonction asynchrone pour récupérer les annonces
-    const fetchUser = async () => {
+    const fetchAnnoncesFavoris = async () => {
         try {
             const userId = await SecureStore.getItemAsync('user');
             const user = JSON.parse(userId);
             setUser(user);
-            console.log(user)
-            const response = await axios.get(`http://192.168.88.20:8080/auth/annonces/envente?idUser=${user.id}`);
-            const photosLength = response.data[0].photos.length;
-            // setNombrePhotos(photosLength);
+            // console.log(user)
+            const storedToken = await SecureStore.getItemAsync('token');
+            // console.log(storedToken)
+
+            setToken(storedToken)
+            const apiUrl = `http://192.168.88.20:8080/annonces/users/${user.id}`;
+            const config = {
+              headers: {
+                'Authorization': `Bearer ${storedToken}`,
+              },
+            };
+            const response = await axios.get(apiUrl, config);
             setAnnonces(response.data);
         } catch (error) {
             console.error('Erreur lors de la récupération des annonces:', error);
         }
     };
     // Appeler la fonction asynchrone
-    fetchUser();
-}, []);
+    fetchAnnoncesFavoris();
+}, [token]);
 
   const openModal = () => {
     setModalVisible(true);
@@ -74,7 +83,7 @@ const Profile = ({ navigation }) => {
           <View style={global.profilePdp}>
             <Image style={global.profilePdpImage}
               // source={{ uri: user.photo }}
-              source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/voiture-13909.appspot.com/o/45f2d329-e49b-402d-b2c1-7d5daa809a1f.jpeg?alt=media&token=408cd76a-55bc-4454-a9e2-acef0cb3041d' }}
+              source={{ uri: user.photoProfil }}
 
             />
           </View>
