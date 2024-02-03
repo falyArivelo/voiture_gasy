@@ -9,6 +9,7 @@ import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 
 const AnnonceDetails = ({ navigation, route }) => {
+    const [user, setUser] = useState({});
     const annonce = route.params;
     const [liked, setLiked] = useState(annonce.liked);
     const swiperRef = useRef(null);
@@ -19,23 +20,20 @@ const AnnonceDetails = ({ navigation, route }) => {
 
     const updateStatus = async () => {
         try {
+
             const storedToken = await SecureStore.getItemAsync('token');
-            const apiUrl = `http://192.168.88.20:8080/annonces/sellApp`;
+            const apiUrl = `http://192.168.88.46:8080/annonces/sellApp`;
             const config = {
                 headers: {
                     'Authorization': `Bearer ${storedToken}`,
                 },
             };
-            
+
             const response = await axios.put(apiUrl, {
-                idAnnonce: annonce.idAnnonce,
+                idAnnonce: annonce.annonce.idAnnonce,
                 idUser: 252,
             }, config);
 
-            // const response = await axios.put('http://192.168.88.20:8080/annonces/sell', {
-            //     idAnnonce: idAnnonce,
-            //     idUser: idUser,
-            // });
 
             console.log(response.data); // Vous pouvez traiter la réponse ici si nécessaire
         } catch (error) {
@@ -43,11 +41,19 @@ const AnnonceDetails = ({ navigation, route }) => {
         }
     };
 
-    // const handleUpdateStatus = (idAnnonce, idUser) => {
-    //     return () => {
-    //         updateStatus(idAnnonce, idUser);
-    //     };
-    // };
+    const fetchUser = async () => {
+        try {
+            const userId = await SecureStore.getItemAsync('user');
+            const user = JSON.parse(userId);
+            setUser(user);
+        } catch (error) {
+            console.error('Erreur lors de la récupération des annonces:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchUser();
+    })
 
 
     return (
@@ -61,7 +67,7 @@ const AnnonceDetails = ({ navigation, route }) => {
                     <View style={global.pdp}>
                         <Image style={global.pdpImage}
                             // source={require('../Shared/images/Audi_SQ5.png')}
-                            source={{ uri: annonce.photos[0].lienPhoto }}
+                            source={{ uri: annonce.annonce.proprietaire.photoProfil }}
                         />
                     </View>
                     <Text style={global.proprioName}>{annonce.annonce.proprietaire.nom}</Text>
@@ -109,14 +115,18 @@ const AnnonceDetails = ({ navigation, route }) => {
                     <Text style={global.descri}>{annonce.annonce.description}</Text>
                     <Text style={global.prix}>{annonce.annonce.prix}</Text>
                 </View>
-                {/* <Text className="status">{annonce.status}</Text> */}
             </View>
-
-            <Button
-                key={annonce.idAnnonce}
-                title={`ventre ${annonce.idAnnonce}`}
-                onPress={() => updateStatus()}
-            />
+            <View>
+                {user.id === annonce.annonce.proprietaire.id && annonce.annonce.status===0 ? (
+                    <TouchableOpacity style={global.publier_vendre_button} onPress={() => updateStatus()}>
+                        <Text style={global.publier_vendre_button_text}>
+                            Vendre
+                        </Text>
+                    </TouchableOpacity>
+                ) : (
+                    <></>
+                )}
+            </View>
         </View>
     )
 }
@@ -126,13 +136,13 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-    
+
 
     },
     image: {
         width: '100%',
         height: '100%',
-        borderRadius:5
+        borderRadius: 5
 
     },
     paginationDot: {

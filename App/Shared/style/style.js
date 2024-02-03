@@ -65,11 +65,13 @@ const global = StyleSheet.create({
     },
     notifsNombre: {
         position: 'absolute',
-        right: 3,
-        top: 3,
-        padding: 3,
-        paddingHorizontal: 8,
-        borderRadius: 100,
+        right: 14,
+        top: 12,
+        width:10,
+        height:10,
+        // padding: 3,
+        // paddingHorizontal: 8,
+        borderRadius: 200,
         backgroundColor: '#FF0000', // Remplace --red-color
         color: '#fff', // Remplace --white-color
         fontSize: 16,
@@ -130,21 +132,21 @@ const global = StyleSheet.create({
     },
     imageContainer: {
         position: 'relative',
-        paddingHorizontal:2,
+        paddingHorizontal:5,
 
     },
     imageContainer_details: {
         position: 'relative',
         width: '100%',
-        height:500,
+        height:400,
         marginBottom: 5,
-        paddingHorizontal:2,
+        paddingHorizontal:5,
     },
 
     cardImage: {
         width: '100%',
-        height: 500,
-        borderRadius: 5,
+        height: 400,
+        borderRadius: 10,
         
     },
 
@@ -218,10 +220,9 @@ const global = StyleSheet.create({
         alignItems: 'center',
         top: 10,
         right: 5,
-        padding: 3,
-        paddingLeft: 8,
-        paddingRight: 8,
-        borderRadius: 20,
+        paddingVertical: 3,
+        paddingHorizontal:5,
+        borderRadius: 5,
         backgroundColor: '#000',
         color: '#fff',
         fontWeight: 'bold',
@@ -229,7 +230,7 @@ const global = StyleSheet.create({
     },
     nombrePhotosNombre: {
         color: '#fff', // Remplace --white-color
-        fontSize: 16,
+        fontSize: 13,
     },
 
     flex: {
@@ -350,7 +351,7 @@ const global = StyleSheet.create({
         backgroundColor: '#ededed', // Remplace la couleur par défaut
         zIndex: -1,
         marginBottom: 15, // Ajoutez une marge inférieure au besoin
-        backgroundColor: '#add8e6', // Remplace --light_blue-color
+        backgroundColor: Colors.DARK_GRAY, // Remplace --light_blue-color
         borderRadius: 15,
     },
     logout: {
@@ -362,6 +363,7 @@ const global = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
         textAlign: 'center',
+        color:Colors.WHITE
     },
 
     notifProprio: {
@@ -588,6 +590,22 @@ const global = StyleSheet.create({
     
     },
     publier_apercu_button_text: {
+        fontSize: 20,
+        // fontWeight: 'bold',
+        color: Colors.WHITE,
+        textAlign: 'center'
+    },
+    publier_vendre_button: {
+        backgroundColor: Colors.BLACK,
+        padding: 10,
+        borderRadius: 10,
+        width: 200,
+        marginTop: 15,
+        textAlign: 'center',
+        marginLeft:15
+        // paddingHorizontal:20,
+    },
+    publier_vendre_button_text: {
         fontSize: 20,
         // fontWeight: 'bold',
         color: Colors.WHITE,

@@ -24,7 +24,7 @@ const Favoris = ({ navigation }) => {
                 // console.log(storedToken)
 
                 setToken(storedToken)
-                const apiUrl = `http://192.168.88.20:8080/annoncefavoris/users/${user.id}`;
+                const apiUrl = `http://192.168.88.46:8080/annoncefavoris/users/${user.id}`;
                 const config = {
                     headers: {
                         'Authorization': `Bearer ${storedToken}`,

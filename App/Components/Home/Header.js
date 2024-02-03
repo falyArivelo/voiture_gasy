@@ -30,7 +30,7 @@ export default function Header({ navigation }) {
                 <Pressable onPress={() => navigation.navigate('Notifications')}>
                     <View style={global.myIcon}>
                         <Ionicons name="notifications-outline" size={28} color={Colors.DARK_GRAY} />
-                        <Text style={global.notifsNombre}>3</Text>
+                        <Text style={global.notifsNombre}></Text>
                     </View>
 
                 </Pressable>

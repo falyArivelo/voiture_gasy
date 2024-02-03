@@ -25,7 +25,7 @@ const Annonces = ({ navigation }) => {
             const user = JSON.parse(userId);
             setUser(user);
             // console.log(user)
-            const response = await axios.get(`http://192.168.88.20:8080/auth/annonces/envente?idUser=${user.id}`);
+            const response = await axios.get(`http://192.168.88.46:8080/auth/annonces/envente?idUser=${user.id}`);
             ;
             setAnnonces(response.data);
         } catch (error) {
@@ -37,7 +37,7 @@ const Annonces = ({ navigation }) => {
         fetchAnnonces();
         const intervalId = setInterval(() => {
             fetchAnnonces();
-        }, 5000); 
+        }, 5000);
         return () => clearInterval(intervalId);
 
     }, []);
@@ -69,16 +69,16 @@ const Annonces = ({ navigation }) => {
                     <Pressable
                         onPress={() => navigation.navigate('AnnonceDetails', annonce)}>
                         <View style={global.imageContainer}>
-
-                            <Image
-                                style={global.cardImage}
-                                source={{ uri: annonce.photos[0].lienPhoto }}
-                            />
-
-
+                            {annonce.photos[0] &&
+                                <Image
+                                    style={global.cardImage}
+                                    source={{ uri: annonce.photos[0].lienPhoto }}
+                                />
+                            }
+                            
                             <View style={global.nombrePhotos}>
-                                <Text style={global.nombrePhotosNombre}> + {nombrePhotos}{/* {annonce.nombrePhotos} */} </Text>
-                                <MaterialIcons name="photo" size={24} color="white" />
+                                <Text style={global.nombrePhotosNombre}>+{nombrePhotos}{/* {annonce.nombrePhotos} */} </Text>
+                                <MaterialIcons name="photo" size={20} color="white" />
                             </View>
                         </View>
                     </Pressable>

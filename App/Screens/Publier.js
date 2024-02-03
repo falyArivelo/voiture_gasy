@@ -21,11 +21,7 @@ const Publier = () => {
   const [page1Data, setPage1Data] = useState('Données de la page 1');
 
   const handleNext = () => {
-    // Mettez à jour les données de la page 2 en fonction des données de la page 1
-    // Vous pouvez faire ici des opérations ou des calculs avec page1Data
     const page2Data = `Données de la page 2 basées sur ${page1Data}`;
-
-    // Affichez les données de la page 2 (vous pouvez également naviguer à la page 2)
     console.log(page2Data);
     if (swiperRef.current) {
       swiperRef.current.scrollBy(1);
@@ -33,7 +29,6 @@ const Publier = () => {
   };
 
   const handlePrev = () => {
-    // Utilisez la référence de Swiper pour faire défiler vers la page précédente
     if (swiperRef.current) {
       swiperRef.current.scrollBy(-1);
     }
@@ -42,6 +37,7 @@ const Publier = () => {
   // --------UPLOADING IMAGE----------------//
   const [image, setImage] = useState(null);
   const [images, setImages] = useState([]);
+  const [nbrImages, setNbrImages] = useState(0);
   const [imagesUploaded, setImagesUploaded] = useState([]);
 
   const [Uploading, setUploading] = useState(false)
@@ -59,6 +55,7 @@ const Publier = () => {
     if (!result.canceled) {
       setImages(result.assets)
       setImage(result.assets[0].uri)
+      setNbrImages(result.assets.length)
     }
   }
 
@@ -71,84 +68,6 @@ const Publier = () => {
     updatedImages.splice(index, 1);
     setImages(updatedImages);
   };
-
-  const uploadMedia = async () => {
-    setUploading(true)
-    try {
-       images.map(async (image, index) => {
-        const { uri } = await FileSystem.getInfoAsync(image.uri);
-        const blob = await new Promise((resolve, reject) => {
-          const xhr = new XMLHttpRequest();
-          xhr.onload = () => {
-            resolve(xhr.response)
-          }
-          xhr.onerror = (e) => {
-            reject(new TypeError('Network request failed'));
-          }
-          xhr.responseType = 'blob';
-          xhr.open('GET', uri, true)
-          xhr.send(null)
-        })
-
-        const filename = "img"+index+1;
-        const ref = firebase.storage().ref().child(filename);
-
-        await ref.put(blob)
-        const downloadURL = await ref.getDownloadURL();
-        setImagesUploaded((prevImages) => [...prevImages, downloadURL]);
-        console.log('Lien de téléchargement de l\'image :', downloadURL);
-       })
-
-      setUploading(false)
-      Alert.alert('Photo Uploaded !')
-      setImage(null);
-    } catch (error) {
-      console.error(error)
-      setUploading(false)
-    }
-  }
-
-  // const uploadMedia = async () => {
-  //   setUploading(true);
-  //   try {
-  //     const uploadTasks = images.map(async (image, index) => {
-  //       const { uri } = await FileSystem.getInfoAsync(image);
-  //       const blob = await new Promise((resolve, reject) => {
-  //         const xhr = new XMLHttpRequest();
-  //         xhr.onload = () => {
-  //           resolve(xhr.response);
-  //         };
-  //         xhr.onerror = (e) => {
-  //           reject(new TypeError('Network request failed'));
-  //         };
-  //         xhr.responseType = 'blob';
-  //         xhr.open('GET', uri, true);
-  //         xhr.send(null);
-  //       });
-
-  //       const filename = `image_${index + 1}`;
-  //       const ref = firebase.storage().ref().child(filename);
-
-  //       await ref.put(blob);
-  //       const downloadURL = await ref.getDownloadURL();
-  //       console.log(`Lien de téléchargement de l'image ${index + 1}:`, downloadURL);
-
-  //       return downloadURL;
-  //     });
-
-  //     const uploadedImageURLs = await Promise.all(uploadTasks);
-
-  //     console.log('Toutes les images ont été téléchargées avec succès:', uploadedImageURLs);
-
-  //     setUploading(false);
-  //     Alert.alert('Photos Uploaded!');
-  //     setImages([]); // Réinitialiser le tableau des images après l'upload
-  //   } catch (error) {
-  //     console.error(error);
-  //     setUploading(false);
-  //   }
-  // };
-
 
   const swiperRefImages = useRef(null);
 
@@ -171,7 +90,6 @@ const Publier = () => {
   const [contact, setContact] = useState('');
   const [prix, setPrix] = useState(0.0);
   const [kilometrage, setKilometrage] = useState(0.0);
-  const [photos, setPhotos] = useState([]);
 
   const [searchTerm, setSearchTerm] = useState('');
   const [searchTermModele, setSearchTermModele] = useState('');
@@ -180,7 +98,7 @@ const Publier = () => {
     setSelectedMarque(idMarque);
     try {
       const storedToken = await SecureStore.getItemAsync('token');
-      const apiUrl = `http://192.168.88.20:8080/modeles/${idMarque}`;
+      const apiUrl = `http://192.168.88.46:8080/modeles/${idMarque}`;
       const config = {
         headers: {
           'Authorization': `Bearer ${storedToken}`,
@@ -231,7 +149,7 @@ const Publier = () => {
         const storedToken = await SecureStore.getItemAsync('token');
         setToken(storedToken);
 
-        const apiUrl = 'http://192.168.88.20:8080/marques';
+        const apiUrl = 'http://192.168.88.46:8080/marques';
         const config = {
           headers: {
             'Authorization': `Bearer ${storedToken}`,
@@ -243,7 +161,7 @@ const Publier = () => {
         setOriginalMarques(response.data);
         setFilteredMarques([]);
 
-        const apiUrlCarburants = 'http://192.168.88.20:8080/carburants';
+        const apiUrlCarburants = 'http://192.168.88.46:8080/carburants';
 
         const responseCarburants = await axios.get(apiUrlCarburants, config);
         setCarburants(responseCarburants.data);
@@ -256,7 +174,51 @@ const Publier = () => {
     fetchMarques();
   }, [token]);
 
-  const handleSubmit = async () => {
+  const publierAnnonce = async () => {
+    setUploading(true)
+    const tabs = [];
+
+    try {
+      const uploadPromises = images.map(async (image, index) => {
+        const { uri } = await FileSystem.getInfoAsync(image.uri);
+        const blob = await new Promise((resolve, reject) => {
+          const xhr = new XMLHttpRequest();
+          xhr.onload = () => {
+            resolve(xhr.response)
+          }
+          xhr.onerror = (e) => {
+            reject(new TypeError('Network request failed'));
+          }
+          xhr.responseType = 'blob';
+          xhr.open('GET', uri, true)
+          xhr.send(null)
+        })
+
+        const filename = uri.substring(uri.lastIndexOf('/') + 1);
+        const ref = firebase.storage().ref().child(filename);
+        await ref.put(blob)
+        const downloadURL = await ref.getDownloadURL();
+        tabs.push(downloadURL);
+        setImagesUploaded((prevImages) => [...prevImages, downloadURL]);
+
+        console.log('Lien de téléchargement de l\'image :', downloadURL);
+      })
+
+      await Promise.all(uploadPromises);
+      console.log(tabs);
+      console.log(imagesUploaded);
+
+
+      setUploading(false)
+      Alert.alert('Photo Uploaded !')
+      setImage(null);
+
+    } catch (error) {
+      console.error(error)
+      setUploading(false)
+    }
+
+    console.log("AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH!!!!!!");
 
     const dataToSend = {
       description: description,
@@ -267,15 +229,14 @@ const Publier = () => {
       contact: contact,
       prix: prix,
       kilometrage: kilometrage,
-      photos: imagesUploaded,
+      photos: tabs,
     };
 
     console.log(dataToSend);
     try {
-
       // const response = await axios.post('URL_DE_VOTRE_API', formData);
       const storedToken = await SecureStore.getItemAsync('token');
-      const apiUrl = `http://192.168.88.20:8080/annonceSaveApp`;
+      const apiUrl = `http://192.168.88.46:8080/annonceSaveApp`;
       const config = {
         headers: {
           'Authorization': `Bearer ${storedToken}`,
@@ -287,6 +248,18 @@ const Publier = () => {
       console.error('Erreur lors de l\'envoi de la requête:', error);
     }
 
+  }
+
+  const handleSubmit = async () => {
+    try {
+      await publierAnnonce();
+    } catch (error) {
+      console.error('Une erreur s\'est produite :', error);
+    }
+
+    setImages([])
+    setImagesUploaded([])
+    setNbrImages(0);
   };
 
   const [filteredMarques, setFilteredMarques] = useState([]);
@@ -359,12 +332,12 @@ const Publier = () => {
                 </Swiper>
               }
 
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 onPress={uploadMedia}
                 style={global.uploadImage_Button}
               >
                 <Text>upload image</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
 
             <TouchableOpacity
@@ -573,7 +546,6 @@ const Publier = () => {
           </Text>
         </TouchableOpacity>
       </View>
-
     </Swiper>
   );
 };

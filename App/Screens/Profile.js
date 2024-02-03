@@ -20,30 +20,30 @@ const Profile = ({ navigation }) => {
   useEffect(() => {
     // Fonction asynchrone pour récupérer les annonces
     const fetchAnnoncesFavoris = async () => {
-        try {
-            const userId = await SecureStore.getItemAsync('user');
-            const user = JSON.parse(userId);
-            setUser(user);
-            // console.log(user)
-            const storedToken = await SecureStore.getItemAsync('token');
-            // console.log(storedToken)
+      try {
+        const userId = await SecureStore.getItemAsync('user');
+        const user = JSON.parse(userId);
+        setUser(user);
+        // console.log(user)
+        const storedToken = await SecureStore.getItemAsync('token');
+        // console.log(storedToken)
 
-            setToken(storedToken)
-            const apiUrl = `http://192.168.88.20:8080/annonces/users/${user.id}`;
-            const config = {
-              headers: {
-                'Authorization': `Bearer ${storedToken}`,
-              },
-            };
-            const response = await axios.get(apiUrl, config);
-            setAnnonces(response.data);
-        } catch (error) {
-            console.error('Erreur lors de la récupération des annonces:', error);
-        }
+        setToken(storedToken)
+        const apiUrl = `http://192.168.88.46:8080/annonces/users/${user.id}`;
+        const config = {
+          headers: {
+            'Authorization': `Bearer ${storedToken}`,
+          },
+        };
+        const response = await axios.get(apiUrl, config);
+        setAnnonces(response.data);
+      } catch (error) {
+        console.error('Erreur lors de la récupération des annonces:', error);
+      }
     };
     // Appeler la fonction asynchrone
     fetchAnnoncesFavoris();
-}, [token]);
+  }, [token]);
 
   const openModal = () => {
     setModalVisible(true);
@@ -92,11 +92,11 @@ const Profile = ({ navigation }) => {
             <Text style={global.email}>{user.email}</Text>
           </View>
         </View>
-        <Pressable onPress={openModal}>
+        <TouchableOpacity onPress={openModal}>
           <View style={global.myIcon}>
             <Entypo name="dots-three-vertical" size={28} color="black" />
           </View>
-        </Pressable>
+        </TouchableOpacity>
       </View>
 
       <View style={global.mesAnnonces}>
@@ -108,7 +108,7 @@ const Profile = ({ navigation }) => {
           keyExtractor={(item, index) => index.toString()}
           ItemSeparatorComponent={() => <View style={{ height: 5 }} />}
           renderItem={({ item }) => (
-            <View style={{ margin: 3 }}>
+            <View style={{ margin: 0 }}>
               <View style={global.favCard}>
                 <Pressable
                   onPress={() => navigation.navigate('AnnonceDetails', item)}>
@@ -117,7 +117,13 @@ const Profile = ({ navigation }) => {
                     style={{ width: '100%', height: 220, borderRadius: 5 }}
                   />
                 </Pressable>
-                <Text style={global.status}>Vendu</Text>
+
+                {user.id === item.annonce.proprietaire.id && item.annonce.status === 10 ? (
+                  <Text style={global.status}>Vendu</Text>
+                ) : (
+                  <></>
+                )}
+
               </View>
             </View>
           )}
@@ -173,7 +179,7 @@ const Profile = ({ navigation }) => {
               <Pressable
                 onPress={handleLogout} style={global.modalListElement_logout}>
                 <View style={global.myIcon} >
-                  <AntDesign name="logout" size={30} color={Colors.DARK_GRAY} />
+                  <AntDesign name="logout" size={30} color={Colors.WHITE} />
                 </View>
                 <Text style={global.logoutText}>
                   Deconnexion

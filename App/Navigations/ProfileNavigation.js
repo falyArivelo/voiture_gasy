@@ -7,9 +7,7 @@ import AnnonceDetails from '../Screens/AnnonceDetails';
 import Favoris from '../Screens/Favoris';
 import Notifications from '../Screens/Notifications';
 import Profile from '../Screens/Profile';
-import Login from '../Screens/Login';
 import AuthNavigation from './AuthNavigation';
-import App from '../../App';
 
 export default function ProfileNavigation() {
   const isAndroid = true;
@@ -22,11 +20,12 @@ export default function ProfileNavigation() {
       // ...(isAndroid && TransitionPresets.ModalPresentationIOS)
 
     }}
+
      style={styles.container}>
       <Stack.Screen name='Profile_screen'
         options={{ headerShown: false }}
         component={Profile} />
-      <Stack.Screen name="AnnonceDetails" component={AnnonceDetails} />
+      <Stack.Screen name="AnnonceDetails" component={AnnonceDetails} options={{ headerShown: false }} />
       <Stack.Screen name="Parameter" component={Parameter} />
       <Stack.Screen name="Favoris" component={Favoris} />
       <Stack.Screen name="Notifications" component={Notifications} />
