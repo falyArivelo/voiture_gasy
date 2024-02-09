@@ -43,15 +43,28 @@ export default function App() {
     <View style={styles.container} className="flex-1">
       <NavigationContainer>
 
-        {/* <Stack.Navigator>
+        <Stack.Navigator>
           <Stack.Screen
             name="Main"
             component={isUserLoggedIn ? TabNavigation : AuthNavigation}
             options={{ headerShown: false }}
           />
-        </Stack.Navigator> */}
 
-        {isUserLoggedIn ? (
+          <Stack.Screen
+            name="Out"
+            component={AuthNavigation}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="Home"
+            component={TabNavigation}
+            options={{ headerShown: false }}
+          />
+
+        </Stack.Navigator>
+
+        {/* {isUserLoggedIn ? (
           <Stack.Navigator>
             <Stack.Screen
               name="TabNavigation"
@@ -59,17 +72,27 @@ export default function App() {
 
               options={{ headerShown: false }}
             />
+            <Stack.Screen
+              name="Out"
+              component={AuthNavigation}
+              options={{ headerShown: false }}
+            />
 
+            <Stack.Screen
+              name="Out"
+              component={isUserLoggedIn ?TabNavigation: AuthNavigation}
+              options={{ headerShown: false }}
+            />
           </Stack.Navigator>
         ) : (
           <Stack.Navigator>
             <Stack.Screen
-              name="Main"
+              name="Out"
               component={AuthNavigation}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>
-        )}
+        )} */}
 
       </NavigationContainer>
     </View >

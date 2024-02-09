@@ -1,39 +1,54 @@
 import React, { useEffect, useState } from 'react'
 import { Text, View, FlatList, Pressable, TouchableOpacity } from 'react-native'
-import { StyleSheet } from 'react-native'
 import Colors from '../../Shared/Colors';
-import infos from '../../Shared/annonces';
 import { Image } from 'react-native';
-import { FontAwesome, MaterialIcons, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialIcons, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Asset } from 'expo-asset';
 import global from '../../Shared/style/style';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
-
-// const annonces = infos.annonces;
+import queryString from 'query-string';
 
 const Annonces = ({ navigation }) => {
     const apiUrl = process.env.EXPO_PUBLIC_API_URL;
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState({});
+    const [token, setToken] = useState(null);
 
 
     const [annonces, setAnnonces] = useState([]);
 
-    const fetchAnnonces = async () => {
+    const getToken = async () => {
         try {
             const userId = await SecureStore.getItemAsync('user');
+            const storedToken = await SecureStore.getItemAsync('token');
+
             const user = JSON.parse(userId);
             setUser(user);
+            setToken(storedToken)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const fetchAnnonces = async () => {
+        try {
+
+            
             // console.log(user)
-            const response = await axios.get(`http://192.168.88.46:8080/auth/annonces/envente?idUser=${user.id}`);
+            const userId = await SecureStore.getItemAsync('user');
+            const user = JSON.parse(userId);
+
+            const response = await axios.get(`http://192.168.88.29:8080/auth/annonces/envente?idUser=${user.id}`);
             ;
             setAnnonces(response.data);
+
         } catch (error) {
             console.error('Erreur lors de la récupération des annonces:', error);
         }
     };
 
     useEffect(() => {
+        getToken()
         fetchAnnonces();
         const intervalId = setInterval(() => {
             fetchAnnonces();
@@ -42,12 +57,67 @@ const Annonces = ({ navigation }) => {
 
     }, []);
 
+
     const Annonce = ({ annonce }) => {
         const [liked, setLiked] = useState(annonce.liked);
         const [nombrePhotos, setNombrePhotos] = useState(annonce.photos.length);
 
         const handleLike = () => {
+            if (liked) {
+                unlike();
+            }
+            else {
+                like();
+            }
             setLiked(!liked);
+        };
+
+        const unlike = async () => {
+            // e.preventDefault();
+            console.log("disliked");
+            try {
+
+                const params = { idAnnonce: annonce.annonce.idAnnonce, idUser: user.id };
+                const queryStringified = queryString.stringify(params);
+
+                await axios.delete(`http://192.168.88.29:8080/annoncefavoris/unlike?${queryStringified}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    }
+                });
+
+                // window.location.reload();
+            } catch (error) {
+                // navigate("/login");
+                // navigation.navigate('login');
+                console.log(error)
+
+            }
+        };
+
+        const like = async () => {
+            // e.preventDefault();
+            console.log("liked");
+            try {
+                // const params = new URLSearchParams();
+                // params.append("idAnnonce", annonce.annonce.idAnnonce);
+                // params.append("idUser", user.id);
+
+                const params = { idAnnonce: annonce.annonce.idAnnonce, idUser: user.id };
+                const queryStringified = queryString.stringify(params);
+                await axios.post(`http://192.168.88.29:8080/annoncefavoris?${queryStringified}`, null, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    }
+                });
+                // window.location.reload();
+            } catch (error) {
+                // navigate("/login");
+                // navigation.navigate('login');
+                console.log(error)
+            }
         };
 
         return (
@@ -75,7 +145,7 @@ const Annonces = ({ navigation }) => {
                                     source={{ uri: annonce.photos[0].lienPhoto }}
                                 />
                             }
-                            
+
                             <View style={global.nombrePhotos}>
                                 <Text style={global.nombrePhotosNombre}>+{nombrePhotos}{/* {annonce.nombrePhotos} */} </Text>
                                 <MaterialIcons name="photo" size={20} color="white" />
@@ -91,9 +161,9 @@ const Annonces = ({ navigation }) => {
                             </View>
                         </TouchableOpacity>
 
-                        <View style={global.myIcon}>
+                        {/* <View style={global.myIcon}>
                             <Feather name="message-circle" size={28} color={Colors.DARK_GRAY} />
-                        </View>
+                        </View> */}
                         <Text style={global.annonceDate}>{annonce.annonce.date}</Text>
 
 
@@ -120,7 +190,6 @@ const Annonces = ({ navigation }) => {
             </View>
             <FlatList
                 style={global.list}
-                decelerationRate={0}
                 ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
                 data={annonces}
                 renderItem={({ item }) => <Annonce annonce={item} />}

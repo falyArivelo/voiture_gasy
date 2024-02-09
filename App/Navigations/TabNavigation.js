@@ -1,12 +1,7 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import Home from '../Screens/Home';
-import Map from '../Screens/Map';
-import Search from '../Screens/Search';
-import Profile from '../Screens/Profile';
-import { Ionicons } from '@expo/vector-icons';
-import { FontAwesome } from '@expo/vector-icons';
+
 import { Feather } from '@expo/vector-icons';
 import HomeNavigation from './HomeNavigation';
 import Colors from '../Shared/Colors';
@@ -22,21 +17,13 @@ export default function TabNavigation() {
       tabBarStyle: styles.tab
     }} >
       <Tab.Screen name="HomeScreen" component={HomeNavigation}
-      
         options={{
           tabBarLabel: 'Home',
           tabBarIcon: ({ color, size }) => (
             <Feather name="home" color={color} size={size} />
           ),
         }} />
-      <Tab.Screen name="Search" component={Search}
-        options={{
-          tabBarLabel: 'Search',
-          tabBarIcon: ({ color, size }) => (
-            <Feather name="search" color={color} size={size} />
-          ),
-        }} />
-
+ 
       <Tab.Screen name="Plus" component={Publier}
         options={{
           tabBarLabel: 'plus',
@@ -45,13 +32,6 @@ export default function TabNavigation() {
           ),
         }} />
 
-      <Tab.Screen name="Map" component={Map}
-        options={{
-          tabBarLabel: 'Map',
-          tabBarIcon: ({ color, size }) => (
-            <Feather name="map" color={color} size={size} />
-          ),
-        }} />
       <Tab.Screen name="Profile" component={ProfileNavigation}
         options={{
           tabBarLabel: 'Profile',

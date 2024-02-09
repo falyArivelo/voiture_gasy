@@ -7,9 +7,11 @@ import global from './../Shared/style/style';
 import Swiper from 'react-native-swiper';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const AnnonceDetails = ({ navigation, route }) => {
     const [user, setUser] = useState({});
+    const [token, setToken] = useState(null);
     const annonce = route.params;
     const [liked, setLiked] = useState(annonce.liked);
     const swiperRef = useRef(null);
@@ -22,7 +24,7 @@ const AnnonceDetails = ({ navigation, route }) => {
         try {
 
             const storedToken = await SecureStore.getItemAsync('token');
-            const apiUrl = `http://192.168.88.46:8080/annonces/sellApp`;
+            const apiUrl = `http://192.168.88.29:8080/annonces/sellApp`;
             const config = {
                 headers: {
                     'Authorization': `Bearer ${storedToken}`,
@@ -51,13 +53,28 @@ const AnnonceDetails = ({ navigation, route }) => {
         }
     };
 
+    const [categorie, setCategorie] = useState([]);
+    const loadCategorie = async () => {
+        const storedToken = await SecureStore.getItemAsync('token');
+        setToken(storedToken)
+        const result = await axios.get("http://192.168.88.29:8080/auth/modele/categories/" + annonce.annonce.modele.idModele, {
+            headers: {
+                'Authorization': `Bearer ${storedToken}`
+            }
+        });
+        setCategorie(result.data);
+    }
+
+
     useEffect(() => {
         fetchUser();
+        loadCategorie();
     })
 
 
+
     return (
-        <View style={{ backgroundColor: Colors.BG_COLOR, paddingTop: 70 }}>
+        <ScrollView style={{ backgroundColor: Colors.BG_COLOR, paddingTop: 70 }}>
             <View
                 // className="bg-white rounded-lg p-15 pt-5 mb-10 min-h-[150px]"
                 style={global.card}
@@ -91,6 +108,7 @@ const AnnonceDetails = ({ navigation, route }) => {
                 </View>
 
 
+
                 <View style={global.annonceButtons}>
                     <TouchableOpacity onPress={handleLike} >
                         <View style={global.myIcon} >
@@ -115,19 +133,55 @@ const AnnonceDetails = ({ navigation, route }) => {
                     <Text style={global.descri}>{annonce.annonce.description}</Text>
                     <Text style={global.prix}>{annonce.annonce.prix}</Text>
                 </View>
+                <View>
+                    {user.id === annonce.annonce.proprietaire.id && annonce.annonce.status === 0 ? (
+                        <TouchableOpacity style={global.publier_vendre_button} onPress={() => navigation.navigate('Vendre', annonce)}>
+                            <Text style={global.publier_vendre_button_text}>
+                                Vendre
+                            </Text>
+                        </TouchableOpacity>
+                    ) : (
+                        <></>
+                    )}
+                </View>
+
+                <View style={global.dcategoryList}>
+                    {
+                        categorie.map((cat) => (
+                            <View style={global.dcategoryItem}>{cat.categorie.nom}</View>
+                        ))
+                    }
+                </View>
+                <View style={global.additionalDetails}>
+                    <View style={global.detailsSection}>
+                        <Text style={global.detailsName}>Source d'energie</Text>
+                        <Text style={global.detailsValue}>{annonce.annonce.carburant.nom}</Text>
+                    </View>
+
+                    <View style={global.detailsSection}>
+                        <Text style={global.detailsName}>Boite de vitesse</Text>
+                        <Text style={global.detailsValue}>{annonce.annonce.boite}</Text>
+                    </View>
+
+                    <View style={global.detailsSection}>
+                        <Text style={global.detailsName}>Kilometrage</Text>
+                        <Text style={global.detailsValue}>{annonce.annonce.kilometrage} km</Text>
+                    </View>
+
+                    <View style={global.detailsSection}>
+                        <Text style={global.detailsName}>Histoire d'entretien</Text>
+                        <Text style={global.detailsValue}>Entretien régulier effectué chez le concessionnaire</Text>
+                        <Text style={global.detailsValue}>Aucun accident signalé</Text>
+                    </View>
+
+                    <View style={global.detailsSection}>
+                        <Text style={global.detailsName}>Contact</Text>
+                        <Text style={global.detailsValue}>{annonce.annonce.contact}</Text>
+                    </View>
+                </View>
             </View>
-            <View>
-                {user.id === annonce.annonce.proprietaire.id && annonce.annonce.status===0 ? (
-                    <TouchableOpacity style={global.publier_vendre_button} onPress={() => updateStatus()}>
-                        <Text style={global.publier_vendre_button_text}>
-                            Vendre
-                        </Text>
-                    </TouchableOpacity>
-                ) : (
-                    <></>
-                )}
-            </View>
-        </View>
+
+        </ScrollView>
     )
 }
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Button, StyleSheet, ScrollView, Alert, Image, } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert, Image, Pressable, } from 'react-native';
 import Swiper from 'react-native-swiper';
 import global from '../Shared/style/style'
 import { Ionicons } from '@expo/vector-icons';
@@ -11,9 +11,9 @@ import { firebase } from '../../config'
 import * as FileSystem from 'expo-file-system'
 import * as ImagePicker from 'expo-image-picker'
 import { MaterialIcons, Feather } from '@expo/vector-icons';
-// import SearchBar from 'react-native-searchbar';
+import LottieView from 'lottie-react-native';
 
-const Publier = () => {
+const Publier = ({ navigation }) => {
 
   // --------SLIDER----------------//
   const swiperRef = useRef(null);
@@ -34,6 +34,12 @@ const Publier = () => {
     }
   };
 
+  const handlePrev2 = () => {
+    if (swiperRef.current) {
+      swiperRef.current.scrollBy(-2);
+    }
+  };
+
   // --------UPLOADING IMAGE----------------//
   const [image, setImage] = useState(null);
   const [images, setImages] = useState([]);
@@ -47,20 +53,22 @@ const Publier = () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       // allowsEditing: true,
-      aspect: [4, 5],
-      quality: 1,
+      // aspect: [5, 5],
+      quality: 0.7,
       allowsMultipleSelection: true
     })
 
     if (!result.canceled) {
-      setImages(result.assets)
-      setImage(result.assets[0].uri)
+      // setImages(result.assets)
+      result.assets.forEach((item, index) => {
+        addImage(item, index);
+      });
       setNbrImages(result.assets.length)
     }
   }
 
-  const addImage = (newImage) => {
-    setImages([...images, newImage]);
+  const addImage = (image, index) => {
+    setImages(prevImages => [...prevImages, image]);
   };
 
   const removeImage = (index) => {
@@ -98,7 +106,7 @@ const Publier = () => {
     setSelectedMarque(idMarque);
     try {
       const storedToken = await SecureStore.getItemAsync('token');
-      const apiUrl = `http://192.168.88.46:8080/modeles/${idMarque}`;
+      const apiUrl = `http://192.168.88.29:8080/modeles/${idMarque}`;
       const config = {
         headers: {
           'Authorization': `Bearer ${storedToken}`,
@@ -149,7 +157,7 @@ const Publier = () => {
         const storedToken = await SecureStore.getItemAsync('token');
         setToken(storedToken);
 
-        const apiUrl = 'http://192.168.88.46:8080/marques';
+        const apiUrl = 'http://192.168.88.29:8080/marques';
         const config = {
           headers: {
             'Authorization': `Bearer ${storedToken}`,
@@ -161,7 +169,7 @@ const Publier = () => {
         setOriginalMarques(response.data);
         setFilteredMarques([]);
 
-        const apiUrlCarburants = 'http://192.168.88.46:8080/carburants';
+        const apiUrlCarburants = 'http://192.168.88.29:8080/carburants';
 
         const responseCarburants = await axios.get(apiUrlCarburants, config);
         setCarburants(responseCarburants.data);
@@ -210,7 +218,7 @@ const Publier = () => {
 
 
       setUploading(false)
-      Alert.alert('Photo Uploaded !')
+      // Alert.alert('Annonce Publié !')
       setImage(null);
 
     } catch (error) {
@@ -236,7 +244,7 @@ const Publier = () => {
     try {
       // const response = await axios.post('URL_DE_VOTRE_API', formData);
       const storedToken = await SecureStore.getItemAsync('token');
-      const apiUrl = `http://192.168.88.46:8080/annonceSaveApp`;
+      const apiUrl = `http://192.168.88.29:8080/annonceSaveApp`;
       const config = {
         headers: {
           'Authorization': `Bearer ${storedToken}`,
@@ -249,18 +257,6 @@ const Publier = () => {
     }
 
   }
-
-  const handleSubmit = async () => {
-    try {
-      await publierAnnonce();
-    } catch (error) {
-      console.error('Une erreur s\'est produite :', error);
-    }
-
-    setImages([])
-    setImagesUploaded([])
-    setNbrImages(0);
-  };
 
   const [filteredMarques, setFilteredMarques] = useState([]);
   const [originalMarques, setOriginalMarques] = useState([]);
@@ -297,6 +293,55 @@ const Publier = () => {
     }
   };
 
+  const [isLoading, setIsLoading] = useState(false);
+  const handleSubmit = async () => {
+    handleNext();
+    setIsLoading(true);
+    try {
+      await publierAnnonce();
+    } catch (error) {
+      console.error('Une erreur s\'est produite :', error);
+    } finally {
+      setIsLoading(false);
+    }
+
+    setImages([])
+    setImagesUploaded([])
+    setNbrImages(0);
+  };
+
+  const pressFinish = () => {
+    handlePrev2();
+    navigation.navigate('Profile')
+  }
+
+  const areAllValuesDefined = () => {
+    // Liste de toutes les valeurs que vous souhaitez vérifier
+    const valuesToCheck = [
+      carburants,
+      description,
+      selectedMarque,
+      selectedModele,
+      selectedCarburant,
+      selectedBoite,
+      contact,
+      // prix,
+      // kilometrage,
+    ];
+
+    // Vérifiez si toutes les valeurs sont définies et différentes de null ou undefined
+    return valuesToCheck.every(value => value !== null && value !== undefined && value !== 0);
+  };
+
+  // Utilisation de la fonction dans votre composant
+  const [isValid, setIsValid] = useState(false);
+  useEffect(() => {
+    setIsValid(areAllValuesDefined());
+    console.log(isValid)
+  })
+
+  // Vous pouvez maintenant utiliser la variable `isValid` dans votre code pour vérifier si toutes les valeurs sont définies.
+
   return (
     // <UploadMediaFile />
     <Swiper
@@ -317,6 +362,7 @@ const Publier = () => {
           <View style={global.publier}>
             <Text style={global.publier_titre} >Publier une annonce</Text>
             <View style={global.uploadImage_Container}>
+              <Feather style={global.bgPicture} name="image" size={140} color="gray" />
               {images &&
                 <Swiper
                   ref={swiperRefImages}
@@ -325,13 +371,20 @@ const Publier = () => {
                   showsPagination={true}
                 >
                   {images.map((imageUrl, index) => (
-                    <View key={index} style={styles.upload_slide}>
-                      <Image source={{ uri: imageUrl.uri }} style={styles.upload_image} />
-                    </View>
+                    <>
+                      <TouchableOpacity onPress={() => removeImage(index)}>
+                        <View style={global.removeImage}>
+                          <Ionicons name="close" size={20} color="black" />
+                        </View>
+                      </TouchableOpacity>
+                      <View key={index} style={styles.upload_slide}>
+                        <Image source={{ uri: imageUrl.uri }} style={styles.upload_image} />
+                      </View>
+
+                    </>
                   ))}
                 </Swiper>
               }
-
               {/* <TouchableOpacity
                 onPress={uploadMedia}
                 style={global.uploadImage_Button}
@@ -353,7 +406,7 @@ const Publier = () => {
         </ScrollView>
         {/* -------- */}
 
-        <TouchableOpacity style={global.publier_next_button} onPress={handleNext}>
+        <TouchableOpacity style={images.length !== 0 ? global.publier_next_button : global.publier_next_button_disable} onPress={handleNext} disabled={images.length === 0}>
           <Text style={global.publier_next_button_text}>Suivant</Text>
         </TouchableOpacity>
 
@@ -500,7 +553,7 @@ const Publier = () => {
             <Text style={global.publier_label}>Prix</Text>
             <TextInput
               style={global.publier_input}
-              value={prix}
+              value={prix.toString()}
               onChangeText={handlePrixChange}
               keyboardType="numeric"
 
@@ -512,7 +565,7 @@ const Publier = () => {
             <Text style={global.publier_label}>kilometrage</Text>
             <TextInput
               style={global.publier_input}
-              value={kilometrage}
+              value={kilometrage.toString()}
               onChangeText={handleKilometrageChange}
               keyboardType="numeric"
               placeholder='kilometrage'
@@ -529,7 +582,7 @@ const Publier = () => {
               <Ionicons name="arrow-back" size={24} color="white" />
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity style={global.publier_apercu_button} onPress={handleSubmit}>
+          <TouchableOpacity style={isValid===true ? global.publier_apercu_button : global.publier_apercu_button_disable } onPress={handleSubmit} disabled={isValid ===false}>
             <Text style={global.publier_apercu_button_text}>
               Publier
               {/* <Ionicons name="arrow-forward" size={24} color="white" /> */}
@@ -540,11 +593,35 @@ const Publier = () => {
       </ScrollView>
 
       <View style={styles.slide}>
-        <TouchableOpacity style={global.publier_previous_button} onPress={handlePrev}>
-          <Text style={global.publier_previous_button_text}>
-            <Ionicons name="arrow-back" size={24} color="white" />
-          </Text>
-        </TouchableOpacity>
+
+
+        {isLoading ? (
+          <LottieView
+            source={require('../Shared/loading.json')}
+            autoPlay
+            loop
+          // style={{
+          //   width: 50,
+          //   height: 50,
+          // }}
+          />
+        ) : (
+          <>
+            <Pressable style={global.finish} onPress={() => pressFinish()}>
+              <View style={global.check}>
+                <Feather name="check" size={70} color="white" />
+              </View>
+              <Text>Voir vos annonces</Text>
+            </Pressable>
+
+            <TouchableOpacity style={global.backUploading} onPress={handlePrev2}>
+              <Ionicons name="close" size={32} color="black" style={global.myIcon} />
+            </TouchableOpacity>
+          </>
+
+        )}
+
+
       </View>
     </Swiper>
   );
@@ -562,10 +639,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    position: 'relative',
+    zIndex: -1
+
+
   },
   upload_image: {
     width: '100%',
     height: '100%',
+    zIndex: -1
   },
   upload_paginationDot: {
     width: 8,

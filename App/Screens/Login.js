@@ -2,15 +2,31 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
+import { style } from 'deprecated-react-native-prop-types/DeprecatedViewPropTypes';
+import Colors from '../Shared/Colors';
+import { SafeAreaView } from 'react-native';
 
 const Login = ({ navigation }) => {
   const [username, setUsername] = useState('falyarivelo@gmail.com');
   const [password, setPassword] = useState('falyarivelo');
 
+  const [inputStates, setInputStates] = useState([
+    { id: 1, isFocused: false },
+    { id: 2, isFocused: false },
+  ]);
+
+  const handleFocusChange = (id, isFocused) => {
+    setInputStates((prevInputStates) =>
+      prevInputStates.map((state) =>
+        state.id === id ? { ...state, isFocused } : state
+      )
+    );
+  };
+
   const handleLogin = async () => {
     try {
-      
-      const response = await axios.post('http://192.168.88.46:8080/auth/loginApp', {
+
+      const response = await axios.post('http://192.168.88.29:8080/auth/loginApp', {
         mail: username,
         password: password,
       });
@@ -21,7 +37,11 @@ const Login = ({ navigation }) => {
         await SecureStore.setItemAsync('user', JSON.stringify(response.data.userId));
 
         console.log('Login successful', response.data);
-        navigation.navigate('Home');
+        // navigation.navigate('Home');
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'Home' }], // Remplacez 'RootScreen' par le nom de votre écran racine
+        });
       }
       else {
         console.error('Invalid credentials');
@@ -42,7 +62,13 @@ const Login = ({ navigation }) => {
           placeholder="Username"
           value={username}
           onChangeText={setUsername}
-          style={styles.input}
+          key={1}
+          style={[styles.input, { 
+            borderColor: inputStates[0].isFocused ? Colors.INPUT_FOCUS : 'transparent',
+            borderWidth: 2,
+           }]}
+          onFocus={() => handleFocusChange(1, true)}
+          onBlur={() => handleFocusChange(1, false)}
         />
 
         <TextInput
@@ -50,7 +76,13 @@ const Login = ({ navigation }) => {
           value={password}
           onChangeText={setPassword}
           secureTextEntry
-          style={styles.input}
+          key={2}
+          style={[styles.input, { 
+            borderColor: inputStates[1].isFocused ? Colors.INPUT_FOCUS  : 'transparent',
+            borderWidth: 2,
+           }]}
+          onFocus={() => handleFocusChange(2, true)}
+          onBlur={() => handleFocusChange(2, false)}
         />
 
         <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
@@ -81,36 +113,38 @@ const styles = StyleSheet.create({
     marginBottom: 50,
   },
   input: {
-    height: 60,
+    height: 65,
     borderColor: 'transparent',
     borderWidth: 1,
-    marginVertical: 8,
+    marginVertical: 5,
     padding: 8,
     paddingLeft: 25,
-    width: '85%',
-    borderRadius: 5,
+    width: '95%',
+    borderRadius: 10,
     fontSize: 16,
     backgroundColor: 'white',
-    ...Platform.select({
-      ios: {
-        shadowColor: 'rgba(0, 0, 0, 0.1)',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.8,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 10,
-        shadowColor: 'gray'
+    // ...Platform.select({
+    //   ios: {
+    //     shadowColor: 'rgba(0, 0, 0, 0.1)',
+    //     shadowOffset: { width: 0, height: 2 },
+    //     shadowOpacity: 0.8,
+    //     shadowRadius: 4,
+    //   },
+    //   android: {
+    //     elevation: 10,
+    //     shadowColor: 'gray'
 
-      },
-    }),
+    //   },
+    // }),
   },
   loginButton: {
     backgroundColor: 'black',
     padding: 25,
-    borderRadius: 5,
-    width: '85%',
+    borderRadius: 20,
+    width: '95%',
     alignItems: 'center',
+    marginTop: 20
+
   },
   buttonText: {
     color: 'white',

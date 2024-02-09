@@ -7,7 +7,6 @@ import AnnonceDetails from '../Screens/AnnonceDetails';
 import Favoris from '../Screens/Favoris';
 import Notifications from '../Screens/Notifications';
 import Profile from '../Screens/Profile';
-import AuthNavigation from './AuthNavigation';
 
 export default function ProfileNavigation() {
   const isAndroid = true;
@@ -29,8 +28,6 @@ export default function ProfileNavigation() {
       <Stack.Screen name="Parameter" component={Parameter} />
       <Stack.Screen name="Favoris" component={Favoris} />
       <Stack.Screen name="Notifications" component={Notifications} />
-      <Stack.Screen name="Deconnexion"  component={AuthNavigation} />
-      {/* <Stack.Screen name="App" component={App} options={{ headerShown: false }} /> */}
     </Stack.Navigator>
   )
 }

@@ -24,12 +24,12 @@ const Profile = ({ navigation }) => {
         const userId = await SecureStore.getItemAsync('user');
         const user = JSON.parse(userId);
         setUser(user);
-        // console.log(user)
+        // console.log( user.photoProfil )
         const storedToken = await SecureStore.getItemAsync('token');
         // console.log(storedToken)
 
         setToken(storedToken)
-        const apiUrl = `http://192.168.88.46:8080/annonces/users/${user.id}`;
+        const apiUrl = `http://192.168.88.29:8080/annonces/users/${user.id}`;
         const config = {
           headers: {
             'Authorization': `Bearer ${storedToken}`,
@@ -67,7 +67,7 @@ const Profile = ({ navigation }) => {
 
       navigation.reset({
         index: 0,
-        routes: [{ name: 'Main' }], // Remplacez 'RootScreen' par le nom de votre écran racine
+        routes: [{ name: 'Out' }], // Remplacez 'RootScreen' par le nom de votre écran racine
       });
 
       console.log('Logout successful');
@@ -76,15 +76,20 @@ const Profile = ({ navigation }) => {
     }
   };
 
+  const toFavoris = () => {
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Favoris' }], // Remplacez 'RootScreen' par le nom de votre écran racine
+    });
+  }
+
   return (
     <View style={global.profile}>
       <View style={global.profileInformations}>
         <View style={global.myFlex}>
           <View style={global.profilePdp}>
             <Image style={global.profilePdpImage}
-              // source={{ uri: user.photo }}
               source={{ uri: user.photoProfil }}
-
             />
           </View>
           <View style={global.profileCoords}>
@@ -108,14 +113,21 @@ const Profile = ({ navigation }) => {
           keyExtractor={(item, index) => index.toString()}
           ItemSeparatorComponent={() => <View style={{ height: 5 }} />}
           renderItem={({ item }) => (
-            <View style={{ margin: 0 }}>
+            <View style={{ margin: 3 }}>
               <View style={global.favCard}>
                 <Pressable
                   onPress={() => navigation.navigate('AnnonceDetails', item)}>
-                  <Image
-                    source={{ uri: item.photos[0].lienPhoto }}
-                    style={{ width: '100%', height: 220, borderRadius: 5 }}
-                  />
+                  {item.photos[0] ? (
+                    <Image
+                      source={{ uri: item.photos[0].lienPhoto }}
+                      style={{ width: '100%', height: 210, borderRadius: 5 }}
+                    />
+                  ) : (
+                    <View
+                      style={{ width: '100%', height: 210, borderRadius: 5,backgroundColor:Colors.GRAY }}
+                    />
+                  )}
+
                 </Pressable>
 
                 {user.id === item.annonce.proprietaire.id && item.annonce.status === 10 ? (
@@ -145,33 +157,33 @@ const Profile = ({ navigation }) => {
             </TouchableOpacity>
             <ScrollView style={global.modalList}>
               <Pressable
-                onPress={() => navigation.navigate('Favoris')} style={global.modalListElement}>
+                 style={global.modalListElement}>
                 <View style={global.myIcon}>
-                  <Feather name="heart" size={24} color={Colors.DARK_GRAY} />
+                  {/* <Feather name="heart" size={24} color={Colors.DARK_GRAY} /> */}
                 </View>
                 <Text style={global.modalListElementText}>
-                  Favoris
-                </Text>
-              </Pressable>
-
-              <Pressable
-                onPress={() => navigation.navigate('Notifications')} style={global.modalListElement}>
-                <View style={global.myIcon}>
-                  <Ionicons name="notifications-outline" size={24} color={Colors.DARK_GRAY} />
-                  <Text style={global.notifsNombre}>3</Text>
-                </View>
-                <Text style={global.modalListElementText}>
-                  Notifications
+                  {/* Favoris */}
                 </Text>
               </Pressable>
 
               <Pressable
                 style={global.modalListElement}>
                 <View style={global.myIcon}>
-                  <Feather name="settings" size={24} color={Colors.DARK_GRAY} />
+                  {/* <Ionicons name="notifications-outline" size={24} color={Colors.DARK_GRAY} /> */}
+                  {/* <Text style={global.notifsNombre}></Text> */}
                 </View>
                 <Text style={global.modalListElementText}>
-                  Paramètres
+                  {/* Notifications */}
+                </Text>
+              </Pressable>
+
+              <Pressable
+                style={global.modalListElement}>
+                <View style={global.myIcon}>
+                  {/* <Feather name="settings" size={24} color={Colors.DARK_GRAY} /> */}
+                </View>
+                <Text style={global.modalListElementText}>
+                  {/* Paramètres */}
                 </Text>
 
               </Pressable>

@@ -4,9 +4,6 @@ import { StyleSheet } from 'react-native';
 import Colors from '../Shared/Colors';
 import Login from '../Screens/Login';
 import Register from '../Screens/Register';
-import Home from '../Screens/Home';
-import HomeNavigation from './HomeNavigation';
-import TabNavigation from './TabNavigation';
 
 export default function AuthNavigation() {
   const isAndroid = true;
@@ -24,7 +21,7 @@ export default function AuthNavigation() {
         options={{ headerShown: false }}
         component={Login} />
       <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
-      <Stack.Screen name="Home" component={TabNavigation} options={{ headerShown: false }} />
+      {/* <Stack.Screen name="Home" component={TabNavigation} options={{ headerShown: false }} /> */}
 
     </Stack.Navigator>
   )

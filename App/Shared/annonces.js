@@ -29,8 +29,6 @@ const annonces =
             pdp:'https://images.unsplash.com/photo-1656338997878-279d71d48f6e?q=80&w=1364&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 
             photo: 'https://firebasestorage.googleapis.com/v0/b/voiture-13909.appspot.com/o/45f2d329-e49b-402d-b2c1-7d5daa809a1f.jpeg?alt=media&token=408cd76a-55bc-4454-a9e2-acef0cb3041d'
         },
-
-
         {
             idAnnonce: '2',
             idUtilisateur: '2',

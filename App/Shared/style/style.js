@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import Colors from "../Colors";
+import { width } from "deprecated-react-native-prop-types/DeprecatedImagePropType";
 
 
 const global = StyleSheet.create({
@@ -26,9 +27,11 @@ const global = StyleSheet.create({
         flexDirection: 'row',
         gap: 5,
         alignItems: 'center',
-        justifyContent:'space-between',
-        width:'100%',
-        paddingHorizontal:15
+        justifyContent: 'space-between',
+        width: '100%',
+        paddingHorizontal: 15,
+        backgroundColor: Colors.BG_COLOR
+
     },
     container: {
         flex: 1,
@@ -67,8 +70,8 @@ const global = StyleSheet.create({
         position: 'absolute',
         right: 14,
         top: 12,
-        width:10,
-        height:10,
+        width: 10,
+        height: 10,
         // padding: 3,
         // paddingHorizontal: 8,
         borderRadius: 200,
@@ -132,22 +135,37 @@ const global = StyleSheet.create({
     },
     imageContainer: {
         position: 'relative',
-        paddingHorizontal:5,
+        paddingHorizontal: 5,
 
     },
     imageContainer_details: {
         position: 'relative',
         width: '100%',
-        height:400,
+        height: 400,
         marginBottom: 5,
-        paddingHorizontal:5,
+        paddingHorizontal: 5,
     },
 
     cardImage: {
         width: '100%',
         height: 400,
         borderRadius: 10,
-        
+
+    },
+
+    removeImage: {
+        position: 'absolute',
+        right: 3,
+        top: 3,
+        zIndex: 1000,
+        backgroundColor: Colors.WHITE,
+        borderRadius: 50,
+        width: 40,
+        height: 40,
+        // padding:10,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
     },
 
     // ANNONCES
@@ -183,7 +201,9 @@ const global = StyleSheet.create({
     },
     list: {
         width: '100%',
-        backgroundColor: Colors.BG_COLOR
+        backgroundColor: Colors.BG_COLOR,
+        paddingBottom:350,
+
     },
     date: {
         textAlign: 'center',
@@ -221,7 +241,7 @@ const global = StyleSheet.create({
         top: 10,
         right: 5,
         paddingVertical: 3,
-        paddingHorizontal:5,
+        paddingHorizontal: 5,
         borderRadius: 5,
         backgroundColor: '#000',
         color: '#fff',
@@ -363,7 +383,7 @@ const global = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
         textAlign: 'center',
-        color:Colors.WHITE
+        color: Colors.WHITE
     },
 
     notifProprio: {
@@ -411,8 +431,8 @@ const global = StyleSheet.create({
     // FAVCARD
     favCard: {
         position: 'relative',
-        width: 220,
-        height: 220,
+        width: 210,
+        height: 210,
     },
 
     // SEARCH
@@ -473,7 +493,12 @@ const global = StyleSheet.create({
         height: 400,
         backgroundColor: Colors.LIGHT_PRIMARY,
         marginBottom: 5,
-        marginTop: 20
+        marginTop: 20,
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10,
+        overflow: 'hidden'
     },
     pickImage_Button: {
         right: 0,
@@ -514,7 +539,7 @@ const global = StyleSheet.create({
         backgroundColor: Colors.WHITE,
         width: '40%',
         borderRadius: 10,
-        marginLeft: 10, 
+        marginLeft: 10,
     },
     publier_label: {
         fontSize: 20,
@@ -531,7 +556,7 @@ const global = StyleSheet.create({
         padding: 10,
         marginBottom: 5,
         width: '100%',
-        borderRadius:10,
+        borderRadius: 10,
         fontSize: 16
 
         // backgroundColor:'red'
@@ -545,14 +570,22 @@ const global = StyleSheet.create({
         padding: 10,
         marginBottom: 5,
         width: '100%',
-        borderRadius:10,
+        borderRadius: 10,
         textAlignVertical: 'top',
         fontSize: 16
         // textAlign:'start'
         // backgroundColor:'red'
     },
     publier_next_button: {
-        backgroundColor: Colors.BLUE,
+        backgroundColor: Colors.DARK_GRAY,
+        padding: 15,
+        borderRadius: 20,
+        width: '95%',
+        marginBottom: 15,
+        textAlign: 'center'
+    },
+    publier_next_button_disable: {
+        backgroundColor: Colors.DARK_GRAY_disable,
         padding: 15,
         borderRadius: 20,
         width: '95%',
@@ -586,8 +619,16 @@ const global = StyleSheet.create({
         width: 'max-content',
         marginBottom: 15,
         textAlign: 'center',
-        paddingHorizontal:50,
-    
+        paddingHorizontal: 50,
+    },
+    publier_apercu_button_disable: {
+        backgroundColor: Colors.DARK_GRAY_disable,
+        padding: 15,
+        borderRadius: 20,
+        width: 'max-content',
+        marginBottom: 15,
+        textAlign: 'center',
+        paddingHorizontal: 50,
     },
     publier_apercu_button_text: {
         fontSize: 20,
@@ -602,7 +643,7 @@ const global = StyleSheet.create({
         width: 200,
         marginTop: 15,
         textAlign: 'center',
-        marginLeft:15
+        marginLeft: 15
         // paddingHorizontal:20,
     },
     publier_vendre_button_text: {
@@ -611,6 +652,141 @@ const global = StyleSheet.create({
         color: Colors.WHITE,
         textAlign: 'center'
     },
+    finish: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'column',
+        paddingVertical: 350,
+        paddingHorizontal: 150,
+
+    },
+    finish_disable: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'column',
+        paddingVertical: 350,
+        paddingHorizontal: 150,
+        backgroundColor: 'red'
+    },
+    check: {
+        backgroundColor: Colors.BLACK,
+        width: 150,
+        height: 150,
+        borderRadius: 150,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    backUploading: {
+        position: 'absolute',
+        right: 10,
+        top: 80,
+        zIndex: 100,
+    }, bgPicture: {
+        position: 'absolute',
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: -10
+    },
+    choosePdpPage: {
+        height: '92%',
+        backgroundColor: Colors.BG_COLOR,
+        padding: 100,
+        display: 'flex',
+        // justifyContent:'center',
+        alignItems: 'center'
+
+    },
+    choosePdp: {
+        // marginTop: 500,
+        // paddingTop: 100,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    signupPdp: {
+        width: 250,
+        height: 250,
+        borderRadius: 250,
+        overflow: 'hidden',
+        backgroundColor: Colors.GRAY, position: 'relative',
+        zIndex: -1
+    },
+    signupPdpImage: {
+        width: '100%',
+        height: '100%',
+        resizeMode: 'cover', zIndex: -10
+    },
+    signupPdpvide: {
+        width: 250,
+        height: 250,
+        borderRadius: 250,
+        overflow: 'hidden',
+        backgroundColor: Colors.GRAY
+    },
+    removePdpImage: {
+        position: 'relative',
+        left: 10,
+        bottom: -40,
+        zIndex: 1000,
+        backgroundColor: Colors.WHITE,
+        borderRadius: 50,
+        width: 40,
+        height: 40,
+        // padding:10,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    choosePdpText: {
+        fontSize: 35,
+        textAlign: 'center',
+        padding: 20,
+        color: Colors.GRAY,
+        fontWeight: 'bold'
+    },
+    dcategoryList: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        marginBottom: 20,
+    },
+    dcategoryItem: {
+        backgroundColor: '#3498db',
+        color: '#fff',
+        padding: 8,
+        paddingHorizontal: 12,
+        borderRadius: 4,
+        marginRight: 10,
+        marginBottom: 10,
+        fontSize: 0.9,
+    },
+    additionalDetails: {
+        // marginVertical: 20,
+        padding:20,
+        paddingBottom:50,
+        // backgroundColor:'red'r
+      },
+      detailsSection: {
+        marginBottom: 20,
+      },
+      heading: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 8,
+      },
+      detailsName: {
+        color: Colors.GRAY, // Assuming your gray color is similar to #888
+        fontSize: 14,
+      },
+      detailsValue: {
+        color: Colors.DARK_GRAY, // Assuming your black color is similar to #000
+        fontSize: 18,
+        fontWeight: 'bold',
+      },
+
 })
 
 export default global;

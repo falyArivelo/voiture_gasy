@@ -24,7 +24,7 @@ const Favoris = ({ navigation }) => {
                 // console.log(storedToken)
 
                 setToken(storedToken)
-                const apiUrl = `http://192.168.88.46:8080/annoncefavoris/users/${user.id}`;
+                const apiUrl = `http://192.168.88.29:8080/annoncefavoris/users/${user.id}`;
                 const config = {
                     headers: {
                         'Authorization': `Bearer ${storedToken}`,
@@ -53,10 +53,16 @@ const Favoris = ({ navigation }) => {
                     <View style={global.favCard}>
                         <Pressable
                             onPress={() => navigation.navigate('AnnonceDetails', item)}>
-                            <Image
-                                source={{ uri: item.photos[0].lienPhoto }}
-                                style={{ width: '100%', height: 220, borderRadius: 5 }}
-                            />
+                            {item.photos[0] ? (
+                                <Image
+                                    source={{ uri: item.photos[0].lienPhoto }}
+                                    style={{ width: '100%', height: 210, borderRadius: 5 }}
+                                />
+                            ) : (
+                                <View
+                                    style={{ width: '100%', height: 210, borderRadius: 5, backgroundColor: Colors.GRAY }}
+                                />
+                            )}
                         </Pressable>
                     </View>
                 </View>
