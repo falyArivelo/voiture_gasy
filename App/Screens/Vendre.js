@@ -108,7 +108,7 @@ const Vendre = ({ navigation, route }) => {
 
 const styles = StyleSheet.create({
     demandeContainer: {
-        marginVertical: 50,
+        marginVertical: 10,
         padding: 20
 
     },

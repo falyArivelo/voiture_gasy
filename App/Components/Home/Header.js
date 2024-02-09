@@ -48,8 +48,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         gap: 10,
         alignItems: 'center',
-        marginTop: 20,
-        padding: 20,
+        // marginTop: 20,
+        paddingHorizontal: 20,
         paddingBottom: 0,
         backgroundColor:Colors.BG_COLOR
     },

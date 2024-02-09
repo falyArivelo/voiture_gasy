@@ -37,7 +37,7 @@ const global = StyleSheet.create({
         flex: 1,
         // backgroundColor: Colors.BG_COLOR,
         // padding: 20,
-        paddingTop: 60,
+        paddingTop: 10,
         // position:'relative'
     },
     myIcon: {
@@ -289,7 +289,7 @@ const global = StyleSheet.create({
     profile: {
         flex: 1,
         backgroundColor: Colors.BG_COLOR,
-        paddingTop: 60,
+        paddingTop: 20,
     },
 
     profileInformations: {
@@ -537,7 +537,7 @@ const global = StyleSheet.create({
     },
     publier_annonceForm: {
         padding: 15,
-        paddingTop: 70,
+        paddingTop: 20,
         flex: 1,
         width: '100%',
         // backgroundColor: 'black',

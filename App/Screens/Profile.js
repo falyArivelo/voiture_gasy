@@ -43,7 +43,7 @@ const Profile = ({ navigation }) => {
     };
     // Appeler la fonction asynchrone
     fetchAnnoncesFavoris();
-  }, [token]);
+  },);
 
   const openModal = () => {
     setModalVisible(true);

@@ -78,7 +78,7 @@ const AnnonceDetails = ({ navigation, route }) => {
     ];
 
     return (
-        <ScrollView style={{ backgroundColor: Colors.BG_COLOR, paddingTop: 70 }}>
+        <ScrollView style={{ backgroundColor: Colors.BG_COLOR, paddingTop: 20 }}>
             <View
                 style={global.card}
             >

@@ -56,7 +56,7 @@ const Annonces = ({ navigation }) => {
         }, 5000);
         return () => clearInterval(intervalId);
 
-    }, []);
+    });
 
 
     const Annonce = ({ annonce }) => {
@@ -202,7 +202,7 @@ const Annonces = ({ navigation }) => {
             {/* <ScrollView> */}
                 <FlatList
                     // style={global.list}
-                    style={{  marginBottom: 180 }}
+                    style={{  marginBottom: 100 }}
                     // contentContainerStyle={{ flexGrow: 1 }}
                     ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
                     data={annonces}
