@@ -39,12 +39,12 @@ const Annonces = ({ navigation }) => {
             const userId = await SecureStore.getItemAsync('user');
             const user = JSON.parse(userId);
 
-            const response = await axios.get(`http://192.168.88.29:8080/auth/annonces/envente?idUser=${user.id}`);
+            const response = await axios.get(`https://ombaikamitadyws-production.up.railway.app/auth/annonces/envente?idUser=${user.id}`);
             ;
             setAnnonces(response.data);
 
         } catch (error) {
-            console.error('Erreur lors de la récupération des annonces:', error);
+            // console.error('Erreur lors de la récupération des annonces:', error);
         }
     };
 
@@ -81,7 +81,7 @@ const Annonces = ({ navigation }) => {
                 const params = { idAnnonce: annonce.annonce.idAnnonce, idUser: user.id };
                 const queryStringified = queryString.stringify(params);
 
-                await axios.delete(`http://192.168.88.29:8080/annoncefavoris/unlike?${queryStringified}`, {
+                await axios.delete(`https://ombaikamitadyws-production.up.railway.app/annoncefavoris/unlike?${queryStringified}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -107,7 +107,7 @@ const Annonces = ({ navigation }) => {
 
                 const params = { idAnnonce: annonce.annonce.idAnnonce, idUser: user.id };
                 const queryStringified = queryString.stringify(params);
-                await axios.post(`http://192.168.88.29:8080/annoncefavoris?${queryStringified}`, null, {
+                await axios.post(`https://ombaikamitadyws-production.up.railway.app/annoncefavoris?${queryStringified}`, null, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/x-www-form-urlencoded',

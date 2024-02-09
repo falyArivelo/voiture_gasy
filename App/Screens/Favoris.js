@@ -25,7 +25,7 @@ const Favoris = ({ navigation }) => {
                 // console.log(storedToken)
 
                 setToken(storedToken)
-                const apiUrl = `http://192.168.88.29:8080/annoncefavoris/users/${user.id}`;
+                const apiUrl = `https://ombaikamitadyws-production.up.railway.app/annoncefavoris/users/${user.id}`;
                 const config = {
                     headers: {
                         'Authorization': `Bearer ${storedToken}`,
@@ -34,7 +34,7 @@ const Favoris = ({ navigation }) => {
                 const response = await axios.get(apiUrl, config);
                 setAnnonces(response.data);
             } catch (error) {
-                console.error('Erreur lors de la récupération des annonces:', error);
+                // console.error('Erreur lors de la récupération des annonces:', error);
             }
         };
         // Appeler la fonction asynchrone

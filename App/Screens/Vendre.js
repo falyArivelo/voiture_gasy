@@ -21,7 +21,7 @@ const Vendre = ({ navigation, route }) => {
                 setUser(user);
                 const storedToken = await SecureStore.getItemAsync('token');
                 setToken(storedToken)
-                const apiUrl = `http://192.168.88.29:8080/venteannonce/demande/${user.id}`;
+                const apiUrl = `https://ombaikamitadyws-production.up.railway.app/venteannonce/demande/${user.id}`;
                 const config = {
                     headers: {
                         'Authorization': `Bearer ${storedToken}`,
@@ -31,7 +31,7 @@ const Vendre = ({ navigation, route }) => {
                 const demandesFiltrees = response.data.filter((demande) => demande.annonce.idAnnonce === annonce.annonce.idAnnonce)
                 setDemandes(demandesFiltrees);
             } catch (error) {
-                console.error('Erreur lors de la récupération des annonces:', error);
+                // console.error('Erreur lors de la récupération des annonces:', error);
             }
         };
         // Appeler la fonction asynchrone
@@ -47,19 +47,19 @@ const Vendre = ({ navigation, route }) => {
                 idVenteAnnonce: idVenteAnnonce,
                 idUser: idUser
             };
-            await axios.put("http://192.168.88.29:8080/annonces/sellApp", data, {
+            await axios.put("https://ombaikamitadyws-production.up.railway.app/annonces/sellApp", data, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             // window.location.reload();
         } catch (error) {
-            console.error(error);
+            // console.error(error);
             navigate("/login");
         }
     };
     const refus = async (idVenteAnnonce) => {
         // e.preventDefault();
         try {
-            await axios.delete("http://192.168.88.29:8080/venteannonces/" + idVenteAnnonce, {
+            await axios.delete("https://ombaikamitadyws-production.up.railway.app/venteannonces/" + idVenteAnnonce, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             // window.location.reload();

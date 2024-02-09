@@ -24,7 +24,7 @@ const AnnonceDetails = ({ navigation, route }) => {
         try {
 
             const storedToken = await SecureStore.getItemAsync('token');
-            const apiUrl = `http://192.168.88.29:8080/annonces/sellApp`;
+            const apiUrl = `https://ombaikamitadyws-production.up.railway.app/annonces/sellApp`;
             const config = {
                 headers: {
                     'Authorization': `Bearer ${storedToken}`,
@@ -39,7 +39,7 @@ const AnnonceDetails = ({ navigation, route }) => {
 
             console.log(response.data); // Vous pouvez traiter la réponse ici si nécessaire
         } catch (error) {
-            console.error('Erreur lors de la mise à jour du statut :', error);
+            // console.error('Erreur lors de la mise à jour du statut :', error);
         }
     };
 
@@ -49,7 +49,7 @@ const AnnonceDetails = ({ navigation, route }) => {
             const user = JSON.parse(userId);
             setUser(user);
         } catch (error) {
-            console.error('Erreur lors de la récupération des annonces:', error);
+            // console.error('Erreur lors de la récupération des annonces:', error);
         }
     };
 
@@ -57,7 +57,7 @@ const AnnonceDetails = ({ navigation, route }) => {
     const loadCategorie = async () => {
         const storedToken = await SecureStore.getItemAsync('token');
         setToken(storedToken)
-        const result = await axios.get("http://192.168.88.29:8080/auth/modele/categories/" + annonce.annonce.modele.idModele, {
+        const result = await axios.get("https://ombaikamitadyws-production.up.railway.app/auth/modele/categories/" + annonce.annonce.modele.idModele, {
             headers: {
                 'Authorization': `Bearer ${storedToken}`
             }

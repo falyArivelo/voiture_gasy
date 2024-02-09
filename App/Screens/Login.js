@@ -27,7 +27,7 @@ const Login = ({ navigation }) => {
   const handleLogin = async () => {
     try {
 
-      const response = await axios.post('http://192.168.88.29:8080/auth/loginApp', {
+      const response = await axios.post('https://ombaikamitadyws-production.up.railway.app/auth/loginApp', {
         mail: username,
         password: password,
       });
@@ -43,6 +43,7 @@ const Login = ({ navigation }) => {
           index: 0,
           routes: [{ name: 'Home' }], // Remplacez 'RootScreen' par le nom de votre écran racine
         });
+        setErreur(null)
       }
       else {
         // console.error('Invalid credentials');

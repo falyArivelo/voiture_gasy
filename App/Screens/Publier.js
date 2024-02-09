@@ -106,7 +106,7 @@ const Publier = ({ navigation }) => {
     setSelectedMarque(idMarque);
     try {
       const storedToken = await SecureStore.getItemAsync('token');
-      const apiUrl = `http://192.168.88.29:8080/modeles/${idMarque}`;
+      const apiUrl = `https://ombaikamitadyws-production.up.railway.app/modeles/${idMarque}`;
       const config = {
         headers: {
           'Authorization': `Bearer ${storedToken}`,
@@ -157,7 +157,7 @@ const Publier = ({ navigation }) => {
         const storedToken = await SecureStore.getItemAsync('token');
         setToken(storedToken);
 
-        const apiUrl = 'http://192.168.88.29:8080/marques';
+        const apiUrl = 'https://ombaikamitadyws-production.up.railway.app/marques';
         const config = {
           headers: {
             'Authorization': `Bearer ${storedToken}`,
@@ -169,7 +169,7 @@ const Publier = ({ navigation }) => {
         setOriginalMarques(response.data);
         setFilteredMarques([]);
 
-        const apiUrlCarburants = 'http://192.168.88.29:8080/carburants';
+        const apiUrlCarburants = 'https://ombaikamitadyws-production.up.railway.app/carburants';
 
         const responseCarburants = await axios.get(apiUrlCarburants, config);
         setCarburants(responseCarburants.data);
@@ -247,7 +247,7 @@ const Publier = ({ navigation }) => {
     try {
       // const response = await axios.post('URL_DE_VOTRE_API', formData);
       const storedToken = await SecureStore.getItemAsync('token');
-      const apiUrl = `http://192.168.88.29:8080/annonceSaveApp`;
+      const apiUrl = `https://ombaikamitadyws-production.up.railway.app/annonceSaveApp`;
       const config = {
         headers: {
           'Authorization': `Bearer ${storedToken}`,

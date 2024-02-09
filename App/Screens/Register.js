@@ -100,7 +100,7 @@ const Register = ({ navigation }) => {
       setImage(null);
 
       try {
-        const response = await axios.post('http://192.168.88.29:8080/auth/signApp', {
+        const response = await axios.post('https://ombaikamitadyws-production.up.railway.app/auth/signApp', {
           mail: email,
           password: password,
           username: username,
@@ -110,7 +110,7 @@ const Register = ({ navigation }) => {
         // Navigate to the next screen after successful registration
         navigation.navigate('Login');
       } catch (error) {
-        console.error('Login failed', error);
+        // console.error('Login failed', error);
       }
 
     } catch (error) {

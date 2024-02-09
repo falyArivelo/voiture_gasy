@@ -42,7 +42,7 @@ const AnnonceForm = () => {
       const modeles = response.data;
       setModeles(modeles);
     } catch (error) {
-      console.error(error);
+      // console.error(error);
     }
   };
   const handleModeleSelect = (modele) => {
@@ -97,7 +97,7 @@ const AnnonceForm = () => {
         setCarburants(responseCarburants.data);
 
       } catch (error) {
-        console.error('Erreur de requête :', error);
+        // console.error('Erreur de requête :', error);
       }
     };
 
