@@ -69,21 +69,23 @@ const AnnonceDetails = ({ navigation, route }) => {
     useEffect(() => {
         fetchUser();
         loadCategorie();
-    })
+    }, [token])
 
 
+    const months = [
+        "Jan", "Feb", "Mar", "Apr", "Mai", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    ];
 
     return (
         <ScrollView style={{ backgroundColor: Colors.BG_COLOR, paddingTop: 70 }}>
             <View
-                // className="bg-white rounded-lg p-15 pt-5 mb-10 min-h-[150px]"
                 style={global.card}
             >
 
                 <View style={global.proprio}>
                     <View style={global.pdp}>
                         <Image style={global.pdpImage}
-                            // source={require('../Shared/images/Audi_SQ5.png')}
                             source={{ uri: annonce.annonce.proprietaire.photoProfil }}
                         />
                     </View>
@@ -91,7 +93,7 @@ const AnnonceDetails = ({ navigation, route }) => {
                 </View>
 
                 <View style={global.imageContainer_details}>
-                    {annonce.photos &&
+                    {annonce.photos ? (
                         <Swiper
                             ref={swiperRef}
                             loop={false}
@@ -104,6 +106,9 @@ const AnnonceDetails = ({ navigation, route }) => {
                                 </View>
                             ))}
                         </Swiper>
+                    ) : (
+                        <Feather style={global.bgPicture} name="image" size={140} color="gray" />
+                    )
                     }
                 </View>
 
@@ -116,22 +121,21 @@ const AnnonceDetails = ({ navigation, route }) => {
                         </View>
                     </TouchableOpacity>
 
-                    <View style={global.myIcon}>
+                    {/* <View style={global.myIcon}>
                         <Feather name="message-circle" size={28} color={Colors.DARK_GRAY} />
-                    </View>
-                    <Text style={global.annonceDate}>{annonce.annonce.date}</Text>
+                    </View> */}
+                    <Text style={global.annonceDate}>{annonce.annonce.date[2]} {months[annonce.annonce.date[1] - 1]} {annonce.annonce.date[0]}</Text>
 
 
                 </View>
                 <View style={global.informations}>
                     <View
-                        // className="flex flex-row space-x-5 items-center"
                         style={global.myFlex}
                     >
                         <Text style={global.marque}>{annonce.annonce.modele.marque.nom}</Text>
                     </View>
                     <Text style={global.descri}>{annonce.annonce.description}</Text>
-                    <Text style={global.prix}>{annonce.annonce.prix}</Text>
+                    <Text style={global.prix}>{annonce.annonce.prix} MGA</Text>
                 </View>
                 <View>
                     {user.id === annonce.annonce.proprietaire.id && annonce.annonce.status === 0 ? (
@@ -147,8 +151,9 @@ const AnnonceDetails = ({ navigation, route }) => {
 
                 <View style={global.dcategoryList}>
                     {
-                        categorie.map((cat) => (
-                            <View style={global.dcategoryItem}>{cat.categorie.nom}</View>
+                        categorie.map((cat, index) => (
+
+                            <Text key={index} style={global.dcategoryItem}>{cat.categorie.nom}</Text>
                         ))
                     }
                 </View>

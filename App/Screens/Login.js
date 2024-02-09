@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
-import { style } from 'deprecated-react-native-prop-types/DeprecatedViewPropTypes';
 import Colors from '../Shared/Colors';
+import global from '../Shared/style/style';
 import { SafeAreaView } from 'react-native';
 
 const Login = ({ navigation }) => {
   const [username, setUsername] = useState('falyarivelo@gmail.com');
-  const [password, setPassword] = useState('falyarivelo');
+  const [password, setPassword] = useState('faly');
+  const [erreur, setErreur] = useState(null);
 
   const [inputStates, setInputStates] = useState([
     { id: 1, isFocused: false },
@@ -44,10 +45,12 @@ const Login = ({ navigation }) => {
         });
       }
       else {
-        console.error('Invalid credentials');
+        // console.error('Invalid credentials');
+        setErreur("Veuillez reessayer ")
       }
     } catch (error) {
-      console.error('Login failed', error);
+      // console.error('Login failed', error);
+      setErreur("Veuillez Entrer les Bonnes Coordonnées")
     }
     // navigation.navigate('Home');
   };
@@ -59,32 +62,40 @@ const Login = ({ navigation }) => {
         <Text style={styles.title}>Login</Text>
 
         <TextInput
-          placeholder="Username"
+          placeholder="Email"
           value={username}
           onChangeText={setUsername}
           key={1}
-          style={[styles.input, { 
+          style={[styles.input, {
             borderColor: inputStates[0].isFocused ? Colors.INPUT_FOCUS : 'transparent',
             borderWidth: 2,
-           }]}
+          }]}
           onFocus={() => handleFocusChange(1, true)}
           onBlur={() => handleFocusChange(1, false)}
         />
 
         <TextInput
-          placeholder="Password"
+          placeholder="Mot de Passe"
           value={password}
           onChangeText={setPassword}
           secureTextEntry
           key={2}
-          style={[styles.input, { 
-            borderColor: inputStates[1].isFocused ? Colors.INPUT_FOCUS  : 'transparent',
+          style={[styles.input, {
+            borderColor: inputStates[1].isFocused ? Colors.INPUT_FOCUS : 'transparent',
             borderWidth: 2,
-           }]}
+          }]}
           onFocus={() => handleFocusChange(2, true)}
           onBlur={() => handleFocusChange(2, false)}
         />
 
+        <View style={global.erreur}>
+          {erreur ? (
+            <Text style={global.messageErreur}>{erreur}</Text>
+          ) : (
+            // Votre contenu normal à afficher lorsque tout se passe bien
+            <></>
+          )}
+        </View>
         <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
@@ -93,7 +104,6 @@ const Login = ({ navigation }) => {
           <Text style={styles.signupLink}>Don't have an account? Sign up here!</Text>
         </TouchableOpacity>
       </View>
-
     </>
     // </ImageBackground>
   );
@@ -143,7 +153,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     width: '95%',
     alignItems: 'center',
-    marginTop: 20
+    marginTop: 0
 
   },
   buttonText: {

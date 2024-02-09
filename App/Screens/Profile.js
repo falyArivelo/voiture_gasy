@@ -88,9 +88,9 @@ const Profile = ({ navigation }) => {
       <View style={global.profileInformations}>
         <View style={global.myFlex}>
           <View style={global.profilePdp}>
-            <Image style={global.profilePdpImage}
+            {user.photoProfil && <Image style={global.profilePdpImage}
               source={{ uri: user.photoProfil }}
-            />
+            />}
           </View>
           <View style={global.profileCoords}>
             <Text style={global.name}>{user.nom}</Text>
@@ -124,7 +124,7 @@ const Profile = ({ navigation }) => {
                     />
                   ) : (
                     <View
-                      style={{ width: '100%', height: 210, borderRadius: 5,backgroundColor:Colors.GRAY }}
+                      style={{ width: '100%', height: 210, borderRadius: 5, backgroundColor: Colors.GRAY }}
                     />
                   )}
 
@@ -157,7 +157,7 @@ const Profile = ({ navigation }) => {
             </TouchableOpacity>
             <ScrollView style={global.modalList}>
               <Pressable
-                 style={global.modalListElement}>
+                style={global.modalListElement}>
                 <View style={global.myIcon}>
                   {/* <Feather name="heart" size={24} color={Colors.DARK_GRAY} /> */}
                 </View>

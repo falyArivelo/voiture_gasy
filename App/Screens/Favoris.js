@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { View, FlatList, Pressable } from 'react-native'
+import { View,Text, FlatList, Pressable } from 'react-native'
 import { Image } from 'react-native';
 import global from './../Shared/style/style';
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
+import Colors from '../Shared/Colors';
 
 // const annonces = infos.annonces;
 
@@ -64,6 +65,11 @@ const Favoris = ({ navigation }) => {
                                 />
                             )}
                         </Pressable>
+                        {item.annonce.status === 10 ? (
+                            <Text style={global.status}>Vendu</Text>
+                        ) : (
+                            <></>
+                        )}
                     </View>
                 </View>
             )}

@@ -12,5 +12,10 @@ export default {
     INPUT: '#EBEBEB',
     BLUE: '#00557A',
     DARK_GRAY_disable: '#BDBDBD',
-    INPUT_FOCUS: '#DCE0CC'
+    INPUT_FOCUS: '#DCE0CC',
+    LIGHT_GRAY: '#D6D6D6',
+    NORMAL_GRAY: '#C2C2C2',
+    LIGHT_BLUE: '#2E87C2',
+    ERREUR : '#E8191C'
+
 }

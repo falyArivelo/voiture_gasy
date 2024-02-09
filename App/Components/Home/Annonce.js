@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Text, View, FlatList, Pressable, TouchableOpacity } from 'react-native'
+import { Text, View, FlatList, Pressable, TouchableOpacity, Dimensions } from 'react-native'
 import Colors from '../../Shared/Colors';
 import { Image } from 'react-native';
 import { MaterialIcons, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -8,6 +8,7 @@ import global from '../../Shared/style/style';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import queryString from 'query-string';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const Annonces = ({ navigation }) => {
     const apiUrl = process.env.EXPO_PUBLIC_API_URL;
@@ -33,7 +34,7 @@ const Annonces = ({ navigation }) => {
     const fetchAnnonces = async () => {
         try {
 
-            
+
             // console.log(user)
             const userId = await SecureStore.getItemAsync('user');
             const user = JSON.parse(userId);
@@ -120,6 +121,11 @@ const Annonces = ({ navigation }) => {
             }
         };
 
+        const months = [
+            "Jan", "Feb", "Mar", "Apr", "Mai", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        ];
+
         return (
             <View>
                 <View
@@ -139,11 +145,16 @@ const Annonces = ({ navigation }) => {
                     <Pressable
                         onPress={() => navigation.navigate('AnnonceDetails', annonce)}>
                         <View style={global.imageContainer}>
-                            {annonce.photos[0] &&
+                            {annonce.photos[0] ? (
                                 <Image
                                     style={global.cardImage}
                                     source={{ uri: annonce.photos[0].lienPhoto }}
                                 />
+                            ) : (
+                                <View style={global.none}>
+                                    <Feather style={global.bgPicture} name="image" size={140} color={Colors.NORMAL_GRAY} />
+                                </View>
+                            )
                             }
 
                             <View style={global.nombrePhotos}>
@@ -164,7 +175,7 @@ const Annonces = ({ navigation }) => {
                         {/* <View style={global.myIcon}>
                             <Feather name="message-circle" size={28} color={Colors.DARK_GRAY} />
                         </View> */}
-                        <Text style={global.annonceDate}>{annonce.annonce.date}</Text>
+                        <Text style={global.annonceDate}> {annonce.annonce.date[2]} {months[annonce.annonce.date[1] - 1]} {annonce.annonce.date[0]}</Text>
 
 
                     </View>
@@ -175,26 +186,29 @@ const Annonces = ({ navigation }) => {
                             <Text style={global.marque}>{annonce.annonce.modele.marque.nom}</Text>
                         </View>
                         <Text style={global.descri}>{annonce.annonce.description}</Text>
-                        <Text style={global.prix}>{annonce.annonce.prix}</Text>
+                        <Text style={global.prix}>{annonce.annonce.prix} MGA</Text>
                     </View>
                 </View>
 
             </View>
         );
     };
-
+    const screenHeight = Dimensions.get('window').height + 300;
     return (
         <View style={global.annonces}>
             <View>
 
             </View>
-            <FlatList
-                style={global.list}
-                ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
-                data={annonces}
-                renderItem={({ item }) => <Annonce annonce={item} />}
-            />
-
+            {/* <ScrollView> */}
+                <FlatList
+                    // style={global.list}
+                    style={{  marginBottom: 180 }}
+                    // contentContainerStyle={{ flexGrow: 1 }}
+                    ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
+                    data={annonces}
+                    renderItem={({ item }) => <Annonce annonce={item} />}
+                />
+            {/* </ScrollView> */}
             {/* <View style={{ height: 1300 }} /> */}
         </View>
     )

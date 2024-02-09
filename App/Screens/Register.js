@@ -85,8 +85,9 @@ const Register = ({ navigation }) => {
           console.log('Lien de téléchargement de l\'image :', downloadURL);
           return downloadURL; // Ajout de cette ligne pour retourner l'URL depuis la fonction
         } catch (error) {
-          console.error('Une erreur s\'est produite lors du téléchargement de l\'image:', error);
-          throw error; // Lancer l'erreur pour que Promise.all puisse la capturer
+          // console.error('Une erreur s\'est produite lors du téléchargement de l\'image:', error);
+          // throw error; // Lancer l'erreur pour que Promise.all puisse la capturer
+          return 'https://i.pinimg.com/564x/97/7e/56/977e568da382e808209b9294e0c0c10a.jpg';
         }
       };
 
@@ -120,8 +121,15 @@ const Register = ({ navigation }) => {
 
   };
 
+  const [erreur, setErreur] = useState(null);
+
   const handleRegister = async () => {
-    await inscrire()
+    try {
+      await inscrire()
+
+    } catch (error) {
+      setErreur("OOPS ! Une Erreur est survenue")
+    }
   };
 
   return (
@@ -193,7 +201,14 @@ const Register = ({ navigation }) => {
             <Text style={global.choosePdpText}>Choisissez votre Photo de Profile</Text>
 
           </View>
-
+          <View style={global.erreur}>
+            {erreur ? (
+              <Text style={global.messageErreur}>{erreur}</Text>
+            ) : (
+              // Votre contenu normal à afficher lorsque tout se passe bien
+              <></>
+            )}
+          </View>
         </View>
         <View style={global.myFlexSpaceBetween}>
           <TouchableOpacity style={global.publier_previous_button} onPress={handlePrev}>

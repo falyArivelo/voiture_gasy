@@ -28,7 +28,7 @@ export default function HomeNavigation() {
       <Stack.Screen name="Parameter" component={Parameter} />
       <Stack.Screen name="Favoris" component={Favoris} />
       <Stack.Screen name="Notifications" component={Notifications} />
-      <Stack.Screen name="Vendre" component={Vendre} />
+      <Stack.Screen name="Vendre" component={Vendre}   options={{ headerShown: false }} />
 
     </Stack.Navigator>
   )

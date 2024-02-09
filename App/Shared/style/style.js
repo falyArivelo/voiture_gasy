@@ -144,6 +144,7 @@ const global = StyleSheet.create({
         height: 400,
         marginBottom: 5,
         paddingHorizontal: 5,
+        backgroundColor: Colors.LIGHT_GRAY
     },
 
     cardImage: {
@@ -151,6 +152,21 @@ const global = StyleSheet.create({
         height: 400,
         borderRadius: 10,
 
+    },
+
+    none: {
+        width: '100%',
+        height: 400,
+        borderRadius: 10,
+        backgroundColor: Colors.LIGHT_GRAY,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    noneDetails: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
     },
 
     removeImage: {
@@ -202,7 +218,7 @@ const global = StyleSheet.create({
     list: {
         width: '100%',
         backgroundColor: Colors.BG_COLOR,
-        paddingBottom:350,
+        // paddingBottom: 350,
 
     },
     date: {
@@ -266,7 +282,8 @@ const global = StyleSheet.create({
 
     },
     prix: {
-        fontSize: 26,
+        fontSize: 20,
+        fontWeight:'normal',
         color: Colors.DARK_GRAY,
     },
     profile: {
@@ -751,41 +768,57 @@ const global = StyleSheet.create({
     dcategoryList: {
         flexDirection: 'row',
         flexWrap: 'wrap',
-        marginBottom: 20,
+        padding: 20,
+        paddingBottom:0
     },
     dcategoryItem: {
-        backgroundColor: '#3498db',
-        color: '#fff',
+        backgroundColor: Colors.LIGHT_BLUE,
+        color: Colors.WHITE,
         padding: 8,
         paddingHorizontal: 12,
         borderRadius: 4,
         marginRight: 10,
-        marginBottom: 10,
-        fontSize: 0.9,
+        // marginBottom: 10,
+        fontSize: 18,
     },
     additionalDetails: {
         // marginVertical: 20,
-        padding:20,
-        paddingBottom:50,
+        padding: 20,
+        paddingBottom: 50,
         // backgroundColor:'red'r
-      },
-      detailsSection: {
+    },
+    detailsSection: {
         marginBottom: 20,
-      },
-      heading: {
+    },
+    heading: {
         fontSize: 18,
         fontWeight: 'bold',
         marginBottom: 8,
-      },
-      detailsName: {
+    },
+    detailsName: {
         color: Colors.GRAY, // Assuming your gray color is similar to #888
         fontSize: 14,
-      },
-      detailsValue: {
+    },
+    detailsValue: {
         color: Colors.DARK_GRAY, // Assuming your black color is similar to #000
         fontSize: 18,
         fontWeight: 'bold',
-      },
+    },
+    erreur: {
+        // backgroundColor:'red',
+        // padding:40,
+        width:'95%'
+    },
+    messageErreur:{
+        color: Colors.ERREUR,
+        paddingHorizontal:15,
+
+    },
+    messageErreur_center:{
+        color: Colors.ERREUR,
+        textAlign:'center',
+        fontSize:30
+    }
 
 })
 

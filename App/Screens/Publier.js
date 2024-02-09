@@ -22,7 +22,7 @@ const Publier = ({ navigation }) => {
 
   const handleNext = () => {
     const page2Data = `Données de la page 2 basées sur ${page1Data}`;
-    console.log(page2Data);
+    // console.log(page2Data);
     if (swiperRef.current) {
       swiperRef.current.scrollBy(1);
     }
@@ -118,7 +118,7 @@ const Publier = ({ navigation }) => {
       setOriginalModeles(modeles);
       setFilteredModeles([])
     } catch (error) {
-      console.error(error);
+      // console.error(error);
     }
   };
   const handleModeleSelect = (modele) => {
@@ -175,7 +175,9 @@ const Publier = ({ navigation }) => {
         setCarburants(responseCarburants.data);
 
       } catch (error) {
-        console.error('Erreur de requête :', error);
+        // console.error('Erreur de requête :', error);
+        // setErreur("Veillez Réessayer")
+
       }
     };
 
@@ -213,8 +215,8 @@ const Publier = ({ navigation }) => {
       })
 
       await Promise.all(uploadPromises);
-      console.log(tabs);
-      console.log(imagesUploaded);
+      // console.log(tabs);
+      // console.log(imagesUploaded);
 
 
       setUploading(false)
@@ -222,7 +224,8 @@ const Publier = ({ navigation }) => {
       setImage(null);
 
     } catch (error) {
-      console.error(error)
+      // console.error(error)
+      setErreur("Veillez Réessayer ")
       setUploading(false)
     }
 
@@ -253,7 +256,9 @@ const Publier = ({ navigation }) => {
       const response = await axios.post(apiUrl, dataToSend, config);
       console.log('Réponse du serveur:', response.data);
     } catch (error) {
-      console.error('Erreur lors de l\'envoi de la requête:', error);
+      // console.error('Erreur lors de l\'envoi de la requête:', error);
+      setErreur("Veuillez remplir toutes les informations ")
+
     }
 
   }
@@ -293,6 +298,8 @@ const Publier = ({ navigation }) => {
     }
   };
 
+  const [erreur, setErreur] = useState(null);
+
   const [isLoading, setIsLoading] = useState(false);
   const handleSubmit = async () => {
     handleNext();
@@ -300,45 +307,34 @@ const Publier = ({ navigation }) => {
     try {
       await publierAnnonce();
     } catch (error) {
-      console.error('Une erreur s\'est produite :', error);
+      // console.error('Une erreur s\'est produite :', error);
+      setErreur("Veuillez remplir toutes les informations ")
     } finally {
       setIsLoading(false);
+      setImages([])
+      setImagesUploaded([])
+      setNbrImages(0);
+      setDescription('');
+      setSelectedCarburant(0)
+      setSelectedMarque(0)
+      setSelectedModele(0)
+      setContact('')
+      setPrix(0.0)
+      setKilometrage(0.0)
     }
 
-    setImages([])
-    setImagesUploaded([])
-    setNbrImages(0);
+
   };
 
   const pressFinish = () => {
+    setErreur(null)
     handlePrev2();
     navigation.navigate('Profile')
   }
 
-  const areAllValuesDefined = () => {
-    // Liste de toutes les valeurs que vous souhaitez vérifier
-    const valuesToCheck = [
-      carburants,
-      description,
-      selectedMarque,
-      selectedModele,
-      selectedCarburant,
-      selectedBoite,
-      contact,
-      // prix,
-      // kilometrage,
-    ];
-
-    // Vérifiez si toutes les valeurs sont définies et différentes de null ou undefined
-    return valuesToCheck.every(value => value !== null && value !== undefined && value !== 0);
-  };
 
   // Utilisation de la fonction dans votre composant
-  const [isValid, setIsValid] = useState(false);
-  useEffect(() => {
-    setIsValid(areAllValuesDefined());
-    console.log(isValid)
-  })
+
 
   // Vous pouvez maintenant utiliser la variable `isValid` dans votre code pour vérifier si toutes les valeurs sont définies.
 
@@ -371,17 +367,16 @@ const Publier = ({ navigation }) => {
                   showsPagination={true}
                 >
                   {images.map((imageUrl, index) => (
-                    <>
+                    <React.Fragment key={index}>
                       <TouchableOpacity onPress={() => removeImage(index)}>
                         <View style={global.removeImage}>
                           <Ionicons name="close" size={20} color="black" />
                         </View>
                       </TouchableOpacity>
-                      <View key={index} style={styles.upload_slide}>
+                      <View style={styles.upload_slide}>
                         <Image source={{ uri: imageUrl.uri }} style={styles.upload_image} />
                       </View>
-
-                    </>
+                    </React.Fragment>
                   ))}
                 </Swiper>
               }
@@ -582,7 +577,7 @@ const Publier = ({ navigation }) => {
               <Ionicons name="arrow-back" size={24} color="white" />
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity style={isValid===true ? global.publier_apercu_button : global.publier_apercu_button_disable } onPress={handleSubmit} disabled={isValid ===false}>
+          <TouchableOpacity style={global.publier_apercu_button} onPress={handleSubmit}>
             <Text style={global.publier_apercu_button_text}>
               Publier
               {/* <Ionicons name="arrow-forward" size={24} color="white" /> */}
@@ -607,16 +602,34 @@ const Publier = ({ navigation }) => {
           />
         ) : (
           <>
-            <Pressable style={global.finish} onPress={() => pressFinish()}>
-              <View style={global.check}>
-                <Feather name="check" size={70} color="white" />
-              </View>
-              <Text>Voir vos annonces</Text>
-            </Pressable>
+            {erreur ? (
+              <>
+                <Image style={{ width: 300,height:300 }}
+                  source={{ uri: "https://i.pinimg.com/564x/b3/bd/26/b3bd267a41b0a7285bd5fde24d98c355.jpg" }}
+                />
+                <View style={global.erreur}>
 
-            <TouchableOpacity style={global.backUploading} onPress={handlePrev2}>
-              <Ionicons name="close" size={32} color="black" style={global.myIcon} />
-            </TouchableOpacity>
+                  <Text style={global.messageErreur_center}>{erreur}</Text>
+                </View>
+
+                <TouchableOpacity style={global.backUploading} onPress={handlePrev2}>
+                  <Ionicons name="close" size={32} color="black" style={global.myIcon} />
+                </TouchableOpacity>
+              </>
+            ) : (
+              <>
+                <Pressable style={global.finish} onPress={() => pressFinish()}>
+                  <View style={global.check}>
+                    <Feather name="check" size={70} color="white" />
+                  </View>
+                  <Text>Voir vos annonces</Text>
+                </Pressable>
+
+                <TouchableOpacity style={global.backUploading} onPress={handlePrev2}>
+                  <Ionicons name="close" size={32} color="black" style={global.myIcon} />
+                </TouchableOpacity>
+              </>
+            )}
           </>
 
         )}
